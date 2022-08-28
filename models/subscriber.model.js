@@ -28,9 +28,8 @@ class Subscriber {
 
 	static find(email) {
 		const index = subscribers.indexOf(email);
-		if (index !== -1) {
-			return subscribers[index];
-		} else return undefined;
+		if (index !== -1) return subscribers[index];
+		else return undefined;
 	}
 
 	static getAll() {
