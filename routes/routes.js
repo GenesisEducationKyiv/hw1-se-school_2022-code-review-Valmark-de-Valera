@@ -3,9 +3,6 @@ const upload = multer();
 const SubscribersController = require('../controllers/subscribers.controller');
 const RatesController = require('../controllers/rates.controller');
 
-/**
- * Router of API server.
- */
 const router = app => {
     // General requests
     app.get('/api/rate', (request, response) => {
@@ -27,5 +24,4 @@ const router = app => {
     });
 };
 
-// Export the router
 module.exports = router;

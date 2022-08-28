@@ -3,17 +3,7 @@ const { validateEmail } = require('../services/utils');
 const EmailService = require('../services/email-service');
 const RatesController = require('./rates.controller');
 
-/**
- * Controller works with subscriber model via api.
- */
 class SubscribersController {
-    /**
-     * Save email of user to database.
-     *
-     * @param {string} email - email that should be saved.
-     * @param {object} response - express api response object. Use for return rate value to user.
-     * @return {boolean} - return true if save success.
-     */
     static addSubscriber (email, response = undefined) {
         if (email && validateEmail(email)) {
             if (new Subscriber(email).append()) {
@@ -32,13 +22,6 @@ class SubscribersController {
         return true;
     }
 
-    /**
-     * Remove email of user from database.
-     *
-     * @param {string} email - email that should be removed.
-     * @param {object} response - express api response object. Use for return rate value to user.
-     * @return {boolean} - return true if remove success.
-     */
     static removeSubscriber (email, response = undefined) {
         if (email && validateEmail(email)) {
             if (new Subscriber(email).remove()) {
@@ -57,12 +40,6 @@ class SubscribersController {
         return true;
     }
 
-    /**
-     * Send email to saved emails with actual BTC rate from provider.
-     *
-     * @param {object} response - express api response object. Use for return rate value to user.
-     * @return {[]} resultArray - return object with boolean array (sending result) and email. Result true if send success.
-     */
     static async sendEmailsToSubscribersAsync (response = undefined) {
         const allSubs = SubscribersController.getAllSubscribers();
         const resultArray = [];
@@ -80,13 +57,6 @@ class SubscribersController {
         return resultArray;
     }
 
-    /**
-     * Check if email already exist in database.
-     *
-     * @param {string} email - email that should be checked.
-     * @param {object} response - express api response object. Use for return rate value to user.
-     * @return {boolean} - return true if email found in database.
-     */
     static checkIfExist (email, response = undefined) {
         if (Subscriber.find(email)) {
             response?.send('Користувач існує');
@@ -97,12 +67,6 @@ class SubscribersController {
         }
     }
 
-    /**
-     * Get emails array that includes database
-     *
-     * @param {object} response - express api response object. Use for return rate value to user.
-     * @return {[]} subscribersArray - return emails array.
-     */
     static getAllSubscribers (response = undefined) {
         const subscribersArray = Subscriber.getAll();
         response?.send(subscribersArray);

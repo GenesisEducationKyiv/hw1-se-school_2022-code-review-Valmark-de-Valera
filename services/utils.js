@@ -1,9 +1,3 @@
-/**
- * Email validation regex method.
- *
- * @param {string} email - email that should be validated.
- * @return {boolean} - return true is validate success.
- */
 function validateEmail (email) {
     return String(email)
         .toLowerCase()

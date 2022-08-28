@@ -3,47 +3,24 @@ const handlebars = require('handlebars');
 const fs = require('fs').promises;
 require('dotenv').config();
 
-/**
- * Service that works with SMTP providers and send emails to saved emails.
- */
 class EmailService {
-    /**
-     * Actual mail transporter.
-     */
     static transporter = undefined;
 
     constructor () {
-        this.init();
-    }
-
-    /**
-     * Transporter setup.
-     */
-    init () {
-        if (!this.transporter) {
-            // Create mail transporter.
-            try {
-                this.transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    host: process.env.Host,
-                    auth: {
-                        user: process.env.Email,
-                        pass: process.env.Password
-                    }
-                });
-            } catch (e) {
-                console.log(e);
-            }
+        try {
+            this.transporter = nodemailer.createTransport({
+                service: 'gmail',
+                host: process.env.Host,
+                auth: {
+                    user: process.env.Email,
+                    pass: process.env.Password
+                }
+            });
+        } catch (e) {
+            console.log(e);
         }
     }
 
-    /**
-     * Send email template with rate to user.
-     *
-     * @param {string} email - email to send.
-     * @param {number} rate - rate value to send.
-     * @return {boolean} - return true is send success.
-     */
     async sendRateMailAsync (email, rate) {
         if (typeof email !== 'undefined') {
             try {

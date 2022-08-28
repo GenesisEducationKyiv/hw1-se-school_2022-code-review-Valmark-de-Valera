@@ -1,22 +1,11 @@
 const fetch = require('node-fetch');
 
-/**
- * Test provider
- */
 class TestProvider {
-    /**
-     * Some provider requires auth token.
-     */
     token = '';
+    url = 'https://reqres.in/api/products/3';
 
-    /**
-     * Return test number via NOT RATES provider api.
-     * @return {number} - rate value.
-     */
     async getBtcUahRateAsync () {
-        const url = 'https://reqres.in/api/products/3';
-
-        const response = await fetch(url, {
+        const response = await fetch(this.url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
