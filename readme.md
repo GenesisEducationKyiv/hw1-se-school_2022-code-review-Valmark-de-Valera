@@ -2,8 +2,6 @@
 
 ---
 
-> Attention! SMTP credential will be reset for security reason 
-
 ## General
 
 - Node JS (Express API)
