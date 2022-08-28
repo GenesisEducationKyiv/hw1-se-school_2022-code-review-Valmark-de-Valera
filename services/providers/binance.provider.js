@@ -2,10 +2,10 @@ const fetch = require('node-fetch');
 
 class BinanceProvider {
 	token = '';
-	url = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUAH';
 
 	async getBtcUahRateAsync() {
-		const response = await fetch(this.url, {
+		const url = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUAH';
+		const response = await fetch(url, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',

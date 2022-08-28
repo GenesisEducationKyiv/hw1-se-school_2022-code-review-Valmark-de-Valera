@@ -2,10 +2,10 @@ const fetch = require('node-fetch');
 
 class TestProvider {
 	token = '';
-	url = 'https://reqres.in/api/products/3';
 
 	async getBtcUahRateAsync() {
-		const response = await fetch(this.url, {
+		const url = 'https://reqres.in/api/products/3';
+		const response = await fetch(url, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
