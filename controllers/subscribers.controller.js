@@ -1,7 +1,7 @@
 const Subscriber = require('../models/subscriber.model');
 const { validateEmail } = require('../services/utils');
 const EmailService = require('../services/email-service');
-const RatesController = require('./rates.controller');
+const BinanceProvider = require('../services/providers/binance.provider');
 
 class SubscribersController {
 	static addSubscriber(email, response = undefined) {
@@ -54,7 +54,7 @@ class SubscribersController {
 				email: item,
 				success: await emailService.sendRateMailAsync(
 					item,
-					await RatesController.getLastRateAsync()
+					await new BinanceProvider().getBtcUahRateAsync()
 				),
 			});
 		}
