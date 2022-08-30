@@ -1,10 +1,11 @@
 const fetch = require('node-fetch');
+require('dotenv').config();
 
 class TestProvider {
-	token = '';
+	token = process.env.TestProviderToken;
 
 	async getBtcUahRateAsync() {
-		const url = 'https://reqres.in/api/products/3';
+		const url = process.env.TestProviderUrl;
 		const response = await fetch(url, {
 			method: 'GET',
 			headers: {

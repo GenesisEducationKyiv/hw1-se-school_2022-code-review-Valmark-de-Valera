@@ -5,47 +5,47 @@ const RatesController = require('./rates.controller');
 
 class SubscribersController {
 	static addSubscriber(email, response = undefined) {
-		if (email && validateEmail(email)) {
-			if (new Subscriber(email).append()) {
-				response?.send('E-mail додано');
-				return true;
-			} else {
-				response?.status(409).send('Вже є в базі');
-				return false;
-			}
-		} else if (email) {
+		if (!email) {
+			response?.status(400).send('Відсутній параметр:  email');
+			return false;
+		}
+		if (!validateEmail(email)) {
 			response
 				?.status(400)
 				.send('Пошта не є вірною, перевірте введенні дані');
 			return false;
+		}
+		if (new Subscriber(email).append()) {
+			response?.send('E-mail додано');
+			return true;
 		} else {
-			response?.status(400).send('Відсутній параметр:  email');
+			response?.status(409).send('Вже є в базі');
 			return false;
 		}
 	}
 
 	static removeSubscriber(email, response = undefined) {
-		if (email && validateEmail(email)) {
-			if (new Subscriber(email).remove()) {
-				response?.send('E-mail видалено');
-				return true;
-			} else {
-				response?.status(404).send('Пошта вже видалена з бази даних');
-				return false;
-			}
-		} else if (email) {
+		if (!email) {
+			response?.status(400).send('Відсутній параметр:  email');
+			return false;
+		}
+		if (!validateEmail(email)) {
 			response
 				?.status(400)
 				.send('Пошта не є вірною, перевірте введенні дані');
 			return false;
+		}
+		if (new Subscriber(email).remove()) {
+			response?.send('E-mail видалено');
+			return true;
 		} else {
-			response?.status(400).send('Відсутній параметр:  email');
+			response?.status(404).send('Пошта вже видалена з бази даних');
 			return false;
 		}
 	}
 
-	static async sendEmailsToSubscribersAsync(response = undefined) {
-		const allSubs = SubscribersController.getAllSubscribers();
+	static async sendEmailsAsync(response = undefined) {
+		const allSubs = Subscriber.getAll();
 		const resultArray = [];
 		const emailService = new EmailService();
 		console.log(`Sending emails to subscribers: ${allSubs}`);
@@ -60,12 +60,12 @@ class SubscribersController {
 		}
 		console.log(resultArray);
 		if (resultArray.length > 0) response?.send(resultArray);
-		else response?.status(204).send('В базі відсутня пошта'); // Not return body message
+		else response?.status(204);
 		return resultArray;
 	}
 
 	static checkIfExist(email, response = undefined) {
-		if (Subscriber.find(email)) {
+		if (Subscriber.includes(email)) {
 			response?.send('Користувач існує');
 			return true;
 		} else {

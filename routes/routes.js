@@ -12,7 +12,7 @@ const router = (app) => {
 		SubscribersController.addSubscriber(request.body.email, response);
 	});
 	app.post('/api/sendEmails', (request, response) => {
-		SubscribersController.sendEmailsToSubscribersAsync(response);
+		SubscribersController.sendEmailsAsync(response);
 	});
 
 	// Additional requests

@@ -3,12 +3,12 @@ const swaggerDocument = require('./swagger.json');
 const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./routes/routes');
-//const AutomationCronService = require('./services/cron-service');
 const app = express();
+require('dotenv').config();
 
 // Settings
-const host = '0.0.0.0';
-const port = 8080;
+const host = process.env.ServerHost;
+const port = process.env.ServerPort;
 
 app.use(bodyParser.json());
 app.use(
@@ -18,9 +18,6 @@ app.use(
 );
 
 routes(app);
-
-// Automation Service to send emails every day (Disabled by default)
-// AutomationCronService.start()
 
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

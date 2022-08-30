@@ -11,7 +11,7 @@ class AutomationCronService {
 			console.log('-- Running Cron Job --');
 			console.log('----------------------');
 
-			SubscribersController.sendEmailsToSubscribersAsync();
+			SubscribersController.sendEmailsAsync();
 		});
 	}
 }

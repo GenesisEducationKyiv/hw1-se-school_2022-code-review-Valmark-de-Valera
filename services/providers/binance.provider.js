@@ -1,10 +1,11 @@
 const fetch = require('node-fetch');
+require('dotenv').config();
 
 class BinanceProvider {
-	token = '';
+	token = process.env.BinanceProviderToken;
 
 	async getBtcUahRateAsync() {
-		const url = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUAH';
+		const url = process.env.BinanceProviderUrl;
 		const response = await fetch(url, {
 			method: 'GET',
 			headers: {
