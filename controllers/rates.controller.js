@@ -23,6 +23,7 @@ class RatesController {
 		const rateValue = await this.provider.getBtcUahRateAsync();
 		if (!isNaN(rateValue)) response?.send(rateValue.toFixed());
 		else response?.status(400).send('Помилка виконання запиту');
+		return rateValue;
 	}
 }
 
