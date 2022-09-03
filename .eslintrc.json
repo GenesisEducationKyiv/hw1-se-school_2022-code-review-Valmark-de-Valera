@@ -1,0 +1,32 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true
+    },
+    "extends": [
+        "plugin:prettier/recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "plugins": ["prettier"],
+    "rules": {
+        "no-unused-vars": ["error"],
+        "no-invalid-regexp": ["error"],
+        "no-irregular-whitespace": ["error"],
+        "prettier/prettier":
+        [
+            "error",
+            {
+                "singleQuote": true,
+                "useTabs": true,
+                "tabWidth": 4,
+                "semi": true,
+                "bracketSpacing": true,
+                "requirePragma": false,
+                "parser": "flow"
+            }
+        ]
+    }
+}
