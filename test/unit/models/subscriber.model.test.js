@@ -42,7 +42,7 @@ describe('SubscribersController', function () {
 				}
 			);
 		});
-		it('should check missing email and return status 400', function () {
+		it('should create temp file and and check if email was removed', function () {
 			let subscriber = new Subscriber(emailToRemove, fileName);
 			subscriber.remove();
 			let result = require('../../../' + fileName);

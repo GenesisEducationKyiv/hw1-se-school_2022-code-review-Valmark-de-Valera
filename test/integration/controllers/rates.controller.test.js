@@ -1,8 +1,8 @@
 let assert = require('assert');
-const RatesController = require('../../../controllers/rates.controller');
 const sinon = require('sinon');
+const RatesController = require('../../../controllers/rates.controller');
 
-let responce = {
+let response = {
 	status: function (code) {
 		return { status: code, send: function () {} };
 	},
@@ -11,7 +11,7 @@ let responce = {
 
 describe('RatesController', function () {
 	before(function () {
-		sinon.spy(responce, 'send');
+		sinon.spy(response, 'send');
 	});
 	describe('#getLastRateAsync', function () {
 		it('should return rate as number', async function () {
@@ -19,8 +19,8 @@ describe('RatesController', function () {
 
 			for (let item in providersTokenArr) {
 				RatesController.changeProvider(providersTokenArr[item]);
-				await RatesController.getLastRateAsync(responce);
-				const sendArg = responce.send.getCall(item).args[0];
+				await RatesController.getLastRateAsync(response);
+				const sendArg = response.send.getCall(item).args[0];
 				if (isNaN(sendArg))
 					assert.fail(`Provider should return number, not this: ${sendArg}`);
 			}
