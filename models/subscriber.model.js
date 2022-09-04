@@ -1,14 +1,18 @@
 const fs = require('fs');
-const fileName = 'data/subscribers.json';
-const databaseFile = require('../' + fileName);
-
-const subscribers = databaseFile.emails;
+let fileName = 'data/subscribers.json';
+let databaseFile = require('../' + fileName);
+let subscribers = databaseFile.emails;
 
 class Subscriber {
 	email = undefined;
 
-	constructor(email) {
+	constructor(email, customFileName) {
 		this.email = email;
+		if (customFileName) {
+			fileName = customFileName;
+			databaseFile = require('../' + customFileName);
+			subscribers = databaseFile.emails;
+		}
 	}
 
 	append() {
@@ -36,15 +40,11 @@ class Subscriber {
 
 	static updateDb() {
 		databaseFile.emails = subscribers;
-		fs.writeFile(
-			fileName,
-			JSON.stringify(databaseFile, null, 2),
-			function writeJSON(err) {
-				if (err) return console.log(err);
-				console.log(JSON.stringify(databaseFile, null, 2));
-				console.log('Writing to ' + fileName);
-			}
-		);
+		fs.writeFile(fileName, JSON.stringify(databaseFile, null, 2), function writeJSON(err) {
+			if (err) return console.log(err);
+			console.log(JSON.stringify(databaseFile, null, 2));
+			console.log('Writing to ' + fileName);
+		});
 	}
 }
 

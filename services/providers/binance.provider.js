@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 require('dotenv').config();
 
 class BinanceProvider {
+	providerName = 'Binance';
 	token = process.env.BinanceProviderToken;
 
 	async getBtcUahRateAsync() {

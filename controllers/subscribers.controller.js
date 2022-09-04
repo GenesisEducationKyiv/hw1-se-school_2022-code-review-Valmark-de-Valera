@@ -6,13 +6,11 @@ const BinanceProvider = require('../services/providers/binance.provider');
 class SubscribersController {
 	static addSubscriber(email, response = undefined) {
 		if (!email) {
-			response?.status(400).send('Відсутній параметр:  email');
+			response?.status(400).send('Відсутній параметр: email');
 			return false;
 		}
 		if (!validateEmail(email)) {
-			response
-				?.status(400)
-				.send('Пошта не є вірною, перевірте введенні дані');
+			response?.status(400).send('Пошта не є вірною, перевірте введенні дані');
 			return false;
 		}
 		if (new Subscriber(email).append()) {
@@ -30,9 +28,7 @@ class SubscribersController {
 			return false;
 		}
 		if (!validateEmail(email)) {
-			response
-				?.status(400)
-				.send('Пошта не є вірною, перевірте введенні дані');
+			response?.status(400).send('Пошта не є вірною, перевірте введенні дані');
 			return false;
 		}
 		if (new Subscriber(email).remove()) {
@@ -44,12 +40,11 @@ class SubscribersController {
 		}
 	}
 
-	static async sendEmailsAsync(response = undefined) {
-		const allSubs = Subscriber.getAll();
+	static async sendEmailsAsync(response = undefined, receivers = Subscriber.getAll()) {
 		const resultArray = [];
 		const emailService = new EmailService();
-		console.log(`Sending emails to subscribers: ${allSubs}`);
-		for (const item of allSubs) {
+		console.log(`Sending emails to subscribers: ${receivers}`);
+		for (const item of receivers) {
 			resultArray.push({
 				email: item,
 				success: await emailService.sendRateMailAsync(
@@ -59,7 +54,7 @@ class SubscribersController {
 			});
 		}
 		console.log(resultArray);
-		if (resultArray.length > 0) response?.send(resultArray);
+		if (resultArray.length) response?.send(resultArray);
 		else response?.status(204);
 		return resultArray;
 	}
