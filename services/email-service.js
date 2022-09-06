@@ -25,10 +25,9 @@ class EmailService {
 		if (typeof email === 'undefined') return false;
 		try {
 			console.log(rate);
-			const htmlTemplate = await fs.readFile(
-				'templates/mail-template.html',
-				{ encoding: 'utf-8' }
-			);
+			const htmlTemplate = await fs.readFile('templates/mail-template.html', {
+				encoding: 'utf-8',
+			});
 			const template = handlebars.compile(htmlTemplate);
 			const replacements = {
 				BTC_rate: rate.toString(),

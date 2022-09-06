@@ -25,7 +25,9 @@
                 "semi": true,
                 "bracketSpacing": true,
                 "requirePragma": false,
-                "parser": "flow"
+                "parser": "flow",
+                "arrowParens": "always",
+                "printWidth": 100
             }
         ]
     }

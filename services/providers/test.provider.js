@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 require('dotenv').config();
 
 class TestProvider {
+	providerName = 'Test';
 	token = process.env.TestProviderToken;
 
 	async getBtcUahRateAsync() {
