@@ -1,6 +1,6 @@
 let assert = require('assert');
 const puppeteer = require('puppeteer');
-const BinanceProvider = require('../../services/providers/binance.provider');
+const BinanceProvider = require('../../services/rates/providers/binance.provider');
 
 describe('Binance E2E Tests', function () {
 	this.timeout(60000);

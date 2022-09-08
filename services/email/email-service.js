@@ -9,7 +9,7 @@ class EmailService {
 	constructor() {
 		try {
 			this.transporter = nodemailer.createTransport({
-				service: 'gmail',
+				service: process.env.Service,
 				host: process.env.Host,
 				auth: {
 					user: process.env.Email,

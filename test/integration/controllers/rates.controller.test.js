@@ -15,15 +15,12 @@ describe('RatesController', function () {
 	});
 	describe('#getLastRateAsync', function () {
 		it('should return rate as number', async function () {
-			const providersTokenArr = ['binance', 'test'];
-
-			for (let item in providersTokenArr) {
-				RatesController.changeProvider(providersTokenArr[item]);
-				await RatesController.getLastRateAsync(response);
-				const sendArg = response.send.getCall(item).args[0];
+			await RatesController.getBtcUahRateAsync(response);
+			if (response.send.calledOnce) {
+				const sendArg = response.send.getCall(0).args[0];
 				if (isNaN(sendArg))
 					assert.fail(`Provider should return number, not this: ${sendArg}`);
-			}
+			} else assert.fail(`Controller should call send()`);
 
 			sinon.reset();
 			assert.ok(true);

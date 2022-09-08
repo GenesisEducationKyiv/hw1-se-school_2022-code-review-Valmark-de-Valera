@@ -1,5 +1,5 @@
 const cron = require('node-cron');
-const SubscribersController = require('../controllers/subscribers.controller');
+const SubscribersController = require('../../controllers/subscribers.controller');
 
 class AutomationCronService {
 	static async start() {

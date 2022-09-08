@@ -1,9 +1,11 @@
-const Subscriber = require('../models/subscriber.model');
 const { validateEmail } = require('../services/utils');
-const EmailService = require('../services/email-service');
-const BinanceProvider = require('../services/providers/binance.provider');
+const EmailService = require('../services/email/email-service');
+const RateService = require('../services/rates/rates-service');
+const SubscribersService = require('../services/subscriber/subscriber-service');
 
 class SubscribersController {
+	static subscribersService = new SubscribersService();
+
 	static addSubscriber(email, response = undefined) {
 		if (!email) {
 			response?.status(400).send('Відсутній параметр: email');
@@ -13,7 +15,7 @@ class SubscribersController {
 			response?.status(400).send('Пошта не є вірною, перевірте введенні дані');
 			return false;
 		}
-		if (new Subscriber(email).append()) {
+		if (this.subscribersService.subscribe(email)) {
 			response?.send('E-mail додано');
 			return true;
 		} else {
@@ -31,7 +33,7 @@ class SubscribersController {
 			response?.status(400).send('Пошта не є вірною, перевірте введенні дані');
 			return false;
 		}
-		if (new Subscriber(email).remove()) {
+		if (this.subscribersService.unsubscribe(email)) {
 			response?.send('E-mail видалено');
 			return true;
 		} else {
@@ -40,16 +42,22 @@ class SubscribersController {
 		}
 	}
 
-	static async sendEmailsAsync(response = undefined, receivers = Subscriber.getAll()) {
-		const resultArray = [];
+	static async sendEmailsAsync(
+		response = undefined,
+		receivers = this.subscribersService.getAllSubscribers()
+	) {
 		const emailService = new EmailService();
-		console.log(`Sending emails to subscribers: ${receivers}`);
-		for (const item of receivers) {
+		const rateService = new RateService();
+		const resultArray = [];
+		const receiversEmail = [];
+		receivers.map((item) => receiversEmail.push(item.email));
+		console.log(`Sending emails to subscribers: ${receiversEmail}`);
+		for (const item of receiversEmail) {
 			resultArray.push({
 				email: item,
 				success: await emailService.sendRateMailAsync(
 					item,
-					await new BinanceProvider().getBtcUahRateAsync()
+					await rateService.getBtcUahRateAsync()
 				),
 			});
 		}
@@ -60,7 +68,7 @@ class SubscribersController {
 	}
 
 	static checkIfExist(email, response = undefined) {
-		if (Subscriber.includes(email)) {
+		if (this.subscribersService.isSubscribed(email)) {
 			response?.send('Користувач існує');
 			return true;
 		} else {
@@ -70,7 +78,7 @@ class SubscribersController {
 	}
 
 	static getAllSubscribers(response = undefined) {
-		const subscribersArray = Subscriber.getAll();
+		const subscribersArray = this.subscribersService.getAllSubscribers();
 		response?.send(subscribersArray);
 		return subscribersArray;
 	}

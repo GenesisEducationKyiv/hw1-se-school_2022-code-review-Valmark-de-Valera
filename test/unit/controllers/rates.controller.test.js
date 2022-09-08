@@ -1,19 +1,30 @@
 let assert = require('assert');
+const sinon = require('sinon');
 const RatesController = require('../../../controllers/rates.controller');
-const BinanceProvider = require('../../../services/providers/binance.provider');
-const TestProvider = require('../../../services/providers/test.provider');
+
+let response = {
+	status: function (code) {
+		return { status: code, send: function () {} };
+	},
+	send: function () {},
+};
 
 describe('RatesController', function () {
-	describe('#changeProvider', function () {
-		it('should change 2 providers and confirm it', function () {
-			const providersArr = [new BinanceProvider(), new TestProvider()];
+	before(function () {
+		sinon.spy(response, 'status');
+	});
+	describe('#changeProviderByNameAsync', function () {
+		it('should return 404 status code', async function () {
+			let providerName = undefined;
 
-			providersArr.map(function (item) {
-				RatesController.changeProvider(item.providerName.toLowerCase());
-				if (RatesController.provider.providerName !== item.providerName)
-					assert.fail(`Provider object is not valid: ${item}`);
-			});
+			await RatesController.changeProviderByNameAsync(providerName, response);
+			if (response.status.calledOnce) {
+				const statusArg = response.status.getCall(0).args[0];
+				if (isNaN(statusArg)) assert.fail(`Controller should return 404 as number`);
+				if (statusArg !== 404) assert.fail(`Controller should return 404`);
+			} else assert.fail(`Controller should call status()`);
 
+			sinon.reset();
 			assert.ok(true);
 		});
 	});

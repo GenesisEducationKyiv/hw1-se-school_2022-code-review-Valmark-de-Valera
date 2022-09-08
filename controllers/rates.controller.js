@@ -1,26 +1,40 @@
-const BinanceProvider = require('../services/providers/binance.provider');
-const TestProvider = require('../services/providers/test.provider');
+const RatesService = require('../services/rates/rates-service');
+const {
+	providersNamesDict,
+	providersKeysDict,
+} = require('../services/rates/const/providers.const');
 
 class RatesController {
-	static provider = new BinanceProvider();
+	static rateService = new RatesService();
 
-	static changeProvider(name) {
-		switch (name) {
-			case 'binance':
-				this.provider = new BinanceProvider();
-				break;
-			case 'test':
-				this.provider = new TestProvider();
-				break;
-			default:
-				this.provider = new BinanceProvider();
-				console.error('Wrong provider name');
-				break;
-		}
+	static async changeProviderByNameAsync(name, response = undefined) {
+		const result = await this.rateService.changeProviderByNameAsync(name);
+		if (result) response?.send('Провайдер успішно змінено');
+		else
+			response
+				?.status(404)
+				.send(
+					`Провайдер не знайдено. Доступні провайдери: ${Object.values(
+						providersNamesDict
+					)}`
+				);
 	}
 
-	static async getLastRateAsync(response = undefined) {
-		const rateValue = await this.provider.getBtcUahRateAsync();
+	static async changeProviderByKeyAsync(key, response = undefined) {
+		const result = await this.rateService.changeProviderByKeyAsync(key);
+		if (result) response?.send('Провайдер успішно змінено');
+		else
+			response
+				?.status(404)
+				.send(
+					`Провайдер не знайдено. Доступні провайдери: ${Object.values(
+						providersKeysDict
+					)}`
+				);
+	}
+
+	static async getBtcUahRateAsync(response = undefined) {
+		const rateValue = await this.rateService.getBtcUahRateAsync();
 		if (!isNaN(rateValue)) response?.send(rateValue.toFixed());
 		else response?.status(400).send('Помилка виконання запиту');
 	}
