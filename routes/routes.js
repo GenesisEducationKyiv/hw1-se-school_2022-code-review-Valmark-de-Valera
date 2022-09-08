@@ -6,7 +6,7 @@ const RatesController = require('../controllers/rates.controller');
 const router = (app) => {
 	// General requests
 	app.get('/api/rate', (request, response) => {
-		RatesController.getLastRateAsync(response);
+		RatesController.getBtcUahRateAsync(response);
 	});
 	app.post('/api/subscribe', upload.none(), (request, response) => {
 		let email = request.body.email;

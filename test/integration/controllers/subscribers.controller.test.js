@@ -1,6 +1,7 @@
 let assert = require('assert');
 const sinon = require('sinon');
 const SubscribersController = require('../../../controllers/subscribers.controller');
+const Subscriber = require('../../../models/subscriber.model');
 
 let response = {
 	status: function (code) {
@@ -16,9 +17,9 @@ describe('SubscribersController', function () {
 	describe('#sendEmailsAsync', function () {
 		this.timeout(5000);
 		it('should sent mails to test emails list', async function () {
-			const emailsArray = ['test@test.com'];
+			const subscribersArray = [new Subscriber('test@test.com')];
 
-			await SubscribersController.sendEmailsAsync(response, emailsArray);
+			await SubscribersController.sendEmailsAsync(response, subscribersArray);
 
 			const sendArg = response.send.getCall(0).args[0];
 			sinon.reset();

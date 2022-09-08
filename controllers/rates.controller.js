@@ -33,7 +33,7 @@ class RatesController {
 				);
 	}
 
-	static async getLastRateAsync(response = undefined) {
+	static async getBtcUahRateAsync(response = undefined) {
 		const rateValue = await this.rateService.getBtcUahRateAsync();
 		if (!isNaN(rateValue)) response?.send(rateValue.toFixed());
 		else response?.status(400).send('Помилка виконання запиту');

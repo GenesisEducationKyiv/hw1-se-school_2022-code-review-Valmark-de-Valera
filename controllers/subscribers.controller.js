@@ -1,11 +1,10 @@
-const Subscriber = require('../models/subscriber.model');
-const SubscriberRepository = require('../repository/subscriber.repository');
 const { validateEmail } = require('../services/utils');
 const EmailService = require('../services/email/email-service');
 const RateService = require('../services/rates/rates-service');
+const SubscribersService = require('../services/subscriber/subscriber-service');
 
 class SubscribersController {
-	static subscriberRepository = new SubscriberRepository();
+	static subscribersService = new SubscribersService();
 
 	static addSubscriber(email, response = undefined) {
 		if (!email) {
@@ -16,7 +15,7 @@ class SubscribersController {
 			response?.status(400).send('Пошта не є вірною, перевірте введенні дані');
 			return false;
 		}
-		if (this.subscriberRepository.append(new Subscriber(email))) {
+		if (this.subscribersService.subscribe(email)) {
 			response?.send('E-mail додано');
 			return true;
 		} else {
@@ -34,7 +33,7 @@ class SubscribersController {
 			response?.status(400).send('Пошта не є вірною, перевірте введенні дані');
 			return false;
 		}
-		if (this.subscriberRepository.remove(new Subscriber(email))) {
+		if (this.subscribersService.unsubscribe(email)) {
 			response?.send('E-mail видалено');
 			return true;
 		} else {
@@ -45,15 +44,17 @@ class SubscribersController {
 
 	static async sendEmailsAsync(
 		response = undefined,
-		receivers = this.subscriberRepository.getAll()
+		receivers = this.subscribersService.getAllSubscribers()
 	) {
-		const resultArray = [];
 		const emailService = new EmailService();
 		const rateService = new RateService();
-		console.log(`Sending emails to subscribers: ${receivers}`);
-		for (const item of receivers) {
+		const resultArray = [];
+		const receiversEmail = [];
+		receivers.map((item) => receiversEmail.push(item.email));
+		console.log(`Sending emails to subscribers: ${receiversEmail}`);
+		for (const item of receiversEmail) {
 			resultArray.push({
-				email: item.email,
+				email: item,
 				success: await emailService.sendRateMailAsync(
 					item,
 					await rateService.getBtcUahRateAsync()
@@ -67,7 +68,7 @@ class SubscribersController {
 	}
 
 	static checkIfExist(email, response = undefined) {
-		if (this.subscriberRepository.includes(email)) {
+		if (this.subscribersService.isSubscribed(email)) {
 			response?.send('Користувач існує');
 			return true;
 		} else {
@@ -77,7 +78,7 @@ class SubscribersController {
 	}
 
 	static getAllSubscribers(response = undefined) {
-		const subscribersArray = this.subscriberRepository.getAll();
+		const subscribersArray = this.subscribersService.getAllSubscribers();
 		response?.send(subscribersArray);
 		return subscribersArray;
 	}

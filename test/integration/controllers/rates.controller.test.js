@@ -15,7 +15,7 @@ describe('RatesController', function () {
 	});
 	describe('#getLastRateAsync', function () {
 		it('should return rate as number', async function () {
-			await RatesController.getLastRateAsync(response);
+			await RatesController.getBtcUahRateAsync(response);
 			if (response.send.calledOnce) {
 				const sendArg = response.send.getCall(0).args[0];
 				if (isNaN(sendArg))

@@ -1,11 +1,11 @@
 let assert = require('assert');
 const fs = require('fs');
 const Subscriber = require('../../../models/subscriber.model');
-const SubscriberRepository = require('../../../repository/subscriber.repository');
+const SubscriberRepository = require('../../../repository/subscribers.repository');
 
 let fileModel = {
 	name: 'Emails of subscribers',
-	emails: [],
+	users: [],
 };
 
 describe('SubscriberRepository', function () {
@@ -24,7 +24,7 @@ describe('SubscriberRepository', function () {
 			subscriberRepository.append(subscriber);
 			let result = require('../../../' + fileName);
 
-			assert.ok(result.emails.includes(email));
+			assert.ok(result.users.some((item) => item.email === email));
 		});
 		after(function (callback) {
 			fs.unlink(fileName, callback);
@@ -35,7 +35,7 @@ describe('SubscriberRepository', function () {
 		const emailToRemove = 'test@test.com';
 		before(function () {
 			let cusFileModel = fileModel;
-			cusFileModel.emails.push(emailToRemove);
+			cusFileModel.users.push(new Subscriber(emailToRemove));
 			fs.writeFileSync(
 				fileName,
 				JSON.stringify(cusFileModel, null, 2),
@@ -51,7 +51,7 @@ describe('SubscriberRepository', function () {
 			subscriberRepository.remove(subscriber);
 			let result = require('../../../' + fileName);
 
-			assert.ok(!result.emails.includes(emailToRemove));
+			assert.ok(!result.users.some((item) => item.email === emailToRemove));
 		});
 		after(function (callback) {
 			fs.unlink(fileName, callback);
