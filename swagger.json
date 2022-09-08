@@ -104,7 +104,7 @@
     "/unsubscribe": {
       "delete": {
         "tags": [
-          "(Not necessary) additional requests"
+          "subscription"
         ],
         "summary": "Відписатися від отримання поточного курсу",
         "description": "Запит має видалити пошту зі списку для отримання курсу.",
@@ -140,7 +140,7 @@
     "/subscribers": {
       "get": {
         "tags": [
-          "(Not necessary) additional requests"
+          "subscription"
         ],
         "summary": "Список підписаних на отримання поточного курсу",
         "description": "Запит має повернути масив з поштами, що є підписаними на отримання курсу.",
@@ -151,6 +151,74 @@
         "responses": {
           "200": {
             "description": "Список електроних пошт"
+          }
+        }
+      }
+    },
+    "/changeProviderByName": {
+      "put": {
+        "tags": [
+          "rate"
+        ],
+        "summary": "Змінити постачальника даних курсу по імені провайдера.",
+        "description": "Запит має змінити постачальника(third-party сервіс) курсу валют та повідомити про успіх.",
+        "operationId": "changeProviderByName",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "formData",
+            "description": "Ім'я провайдера (З великої літери)",
+            "required": true,
+            "type": "string",
+            "enum": ["Binance", "Test", "[WrongToTest]"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Провайдер успішно змінено"
+          },
+          "404": {
+            "description": "Провайдер не знайдено"
+          }
+        }
+      }
+    },
+    "/changeProviderByKey": {
+      "put": {
+        "tags": [
+          "rate"
+        ],
+        "summary": "Змінити постачальника даних курсу по коду провайдера.",
+        "description": "Запит має змінити постачальника(third-party сервіс) курсу валют та повідомити про успіх.",
+        "operationId": "changeProviderByKey",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "formData",
+            "description": "Код провайдера",
+            "required": true,
+            "type": "string",
+            "enum": ["binance-pk", "test-pk", "[WrongToTest]"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Провайдер успішно змінено"
+          },
+          "404": {
+            "description": "Провайдер не знайдено"
           }
         }
       }

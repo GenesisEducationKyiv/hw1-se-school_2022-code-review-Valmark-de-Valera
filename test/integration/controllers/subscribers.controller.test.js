@@ -14,7 +14,7 @@ describe('SubscribersController', function () {
 		sinon.spy(response, 'send');
 	});
 	describe('#sendEmailsAsync', function () {
-		this.timeout(3000);
+		this.timeout(5000);
 		it('should sent mails to test emails list', async function () {
 			const emailsArray = ['test@test.com'];
 

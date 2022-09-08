@@ -1,10 +1,10 @@
 let assert = require('assert');
-const BinanceProvider = require('../../../../services/providers/binance.provider');
+const TestProvider = require('../../../../../services/rates/providers/test.provider');
 
-describe('BinanceProvider', function () {
+describe('TestProvider', function () {
 	describe('#getLastRateAsync', function () {
 		it('should return rate as number', async function () {
-			const provider = new BinanceProvider();
+			const provider = new TestProvider();
 
 			const result = await provider.getBtcUahRateAsync();
 

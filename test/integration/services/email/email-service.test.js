@@ -1,5 +1,5 @@
 let assert = require('assert');
-const EmailService = require('../../../services/email-service');
+const EmailService = require('../../../../services/email/email-service');
 
 describe('EmailService', function () {
 	describe('#sendRateMailAsync', function () {

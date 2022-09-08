@@ -1,9 +1,12 @@
 const Subscriber = require('../models/subscriber.model');
+const SubscriberRepository = require('../repository/subscriber.repository');
 const { validateEmail } = require('../services/utils');
-const EmailService = require('../services/email-service');
-const BinanceProvider = require('../services/providers/binance.provider');
+const EmailService = require('../services/email/email-service');
+const RateService = require('../services/rates/rates-service');
 
 class SubscribersController {
+	static subscriberRepository = new SubscriberRepository();
+
 	static addSubscriber(email, response = undefined) {
 		if (!email) {
 			response?.status(400).send('Відсутній параметр: email');
@@ -13,7 +16,7 @@ class SubscribersController {
 			response?.status(400).send('Пошта не є вірною, перевірте введенні дані');
 			return false;
 		}
-		if (new Subscriber(email).append()) {
+		if (this.subscriberRepository.append(new Subscriber(email))) {
 			response?.send('E-mail додано');
 			return true;
 		} else {
@@ -31,7 +34,7 @@ class SubscribersController {
 			response?.status(400).send('Пошта не є вірною, перевірте введенні дані');
 			return false;
 		}
-		if (new Subscriber(email).remove()) {
+		if (this.subscriberRepository.remove(new Subscriber(email))) {
 			response?.send('E-mail видалено');
 			return true;
 		} else {
@@ -40,16 +43,20 @@ class SubscribersController {
 		}
 	}
 
-	static async sendEmailsAsync(response = undefined, receivers = Subscriber.getAll()) {
+	static async sendEmailsAsync(
+		response = undefined,
+		receivers = this.subscriberRepository.getAll()
+	) {
 		const resultArray = [];
 		const emailService = new EmailService();
+		const rateService = new RateService();
 		console.log(`Sending emails to subscribers: ${receivers}`);
 		for (const item of receivers) {
 			resultArray.push({
-				email: item,
+				email: item.email,
 				success: await emailService.sendRateMailAsync(
 					item,
-					await new BinanceProvider().getBtcUahRateAsync()
+					await rateService.getBtcUahRateAsync()
 				),
 			});
 		}
@@ -60,7 +67,7 @@ class SubscribersController {
 	}
 
 	static checkIfExist(email, response = undefined) {
-		if (Subscriber.includes(email)) {
+		if (this.subscriberRepository.includes(email)) {
 			response?.send('Користувач існує');
 			return true;
 		} else {
@@ -70,7 +77,7 @@ class SubscribersController {
 	}
 
 	static getAllSubscribers(response = undefined) {
-		const subscribersArray = Subscriber.getAll();
+		const subscribersArray = this.subscriberRepository.getAll();
 		response?.send(subscribersArray);
 		return subscribersArray;
 	}

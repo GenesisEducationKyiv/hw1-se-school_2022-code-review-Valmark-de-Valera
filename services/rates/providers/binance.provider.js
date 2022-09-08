@@ -1,8 +1,10 @@
 const fetch = require('node-fetch');
+const { providersNamesDict, providersKeysDict } = require('../const/providers.const');
 require('dotenv').config();
 
 class BinanceProvider {
-	providerName = 'Binance';
+	providerName = providersNamesDict.binance;
+	providerKey = providersKeysDict.binance;
 	token = process.env.BinanceProviderToken;
 
 	async getBtcUahRateAsync() {
