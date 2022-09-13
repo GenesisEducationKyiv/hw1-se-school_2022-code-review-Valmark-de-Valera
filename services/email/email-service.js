@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const handlebars = require('handlebars');
 const fs = require('fs').promises;
+const log = require('../logger')('EmailService');
 require('dotenv').config();
 
 class EmailService {
@@ -17,14 +18,13 @@ class EmailService {
 				},
 			});
 		} catch (e) {
-			console.log(e);
+			log.error(`Error creating transport: ${e.message}`);
 		}
 	}
 
 	async sendRateMailAsync(email, rate) {
 		if (typeof email === 'undefined') return false;
 		try {
-			console.log(rate);
 			const htmlTemplate = await fs.readFile('templates/mail-template.html', {
 				encoding: 'utf-8',
 			});
@@ -47,7 +47,7 @@ class EmailService {
 			let result = await this.transporter.sendMail(mailOptions);
 			return result.accepted.length !== 0;
 		} catch (e) {
-			console.log(e);
+			log.error(`Failed to send email: ${e.message}`);
 			return false;
 		}
 	}

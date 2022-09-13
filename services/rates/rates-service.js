@@ -1,3 +1,4 @@
+const log = require('../logger')('RatesService');
 const BinanceProvider = require('./providers/binance.provider');
 const TestProvider = require('./providers/test.provider');
 const { providersNamesDict, providersKeysDict } = require('./const/providers.const');
@@ -20,7 +21,11 @@ class RatesService {
 				break;
 			default:
 				this.provider = new BinanceProvider();
-				console.error(`Wrong provider key. Available: ${Object.values(providersKeysDict)}`);
+				log.error(
+					`Unknown provider with key "${key}". Available providers: ${Object.values(
+						providersKeysDict
+					)}`
+				);
 				return false;
 		}
 		return true;

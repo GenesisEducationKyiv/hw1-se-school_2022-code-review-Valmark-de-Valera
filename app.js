@@ -3,6 +3,7 @@ const swaggerDocument = require('./swagger.json');
 const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./routes/routes');
+const log = require('services/logger')('App');
 const app = express();
 require('dotenv').config();
 
@@ -22,6 +23,6 @@ routes(app);
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port, host, (error) => {
-	if (error) return console.log(`Error: ${error}`);
-	console.log(`Server running on ${host}:${port}`);
+	if (error) return log.error(error);
+	log.info(`Server running on ${host}:${port}`);
 });

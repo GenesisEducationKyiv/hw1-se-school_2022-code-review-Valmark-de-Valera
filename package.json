@@ -23,7 +23,8 @@
     "node-cron": "^3.0.1",
     "node-fetch": "^2.6.7",
     "nodemailer": "^6.7.2",
-    "swagger-ui-express": "^4.5.0"
+    "swagger-ui-express": "^4.5.0",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.5.0",

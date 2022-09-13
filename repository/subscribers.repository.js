@@ -1,4 +1,5 @@
 const fs = require('fs');
+const log = require('../services/logger')('SubscribersRepository');
 let fileName = 'data/subscribers.json';
 let databaseFile = require('../' + fileName);
 let subscribers = databaseFile.users;
@@ -44,9 +45,8 @@ class SubscribersRepository {
 	updateDb() {
 		databaseFile.users = subscribers;
 		fs.writeFile(fileName, JSON.stringify(databaseFile, null, 2), function writeJSON(err) {
-			if (err) return console.log(err);
-			console.log(JSON.stringify(databaseFile, null, 2));
-			console.log('Writing to ' + fileName);
+			if (err) return log.error(err);
+			log.info(`Writing to ${fileName}: ${JSON.stringify(databaseFile)}`);
 		});
 	}
 }

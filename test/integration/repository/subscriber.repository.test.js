@@ -1,5 +1,6 @@
 let assert = require('assert');
 const fs = require('fs');
+const log = require('../../../services/logger')('SubscribersRepositoryTest');
 const Subscriber = require('../../../models/subscriber.model');
 const SubscriberRepository = require('../../../repository/subscribers.repository');
 
@@ -13,7 +14,7 @@ describe('SubscriberRepository', function () {
 		const fileName = '.tmpTestAdd.json';
 		before(function () {
 			fs.writeFileSync(fileName, JSON.stringify(fileModel, null, 2), function writeJSON(err) {
-				if (err) return console.log(err);
+				if (err) return log.error(`Failed to create temporary file: ${fileName}`);
 			});
 		});
 		it('should create temp file and add new subscriber email', function () {
@@ -40,7 +41,7 @@ describe('SubscriberRepository', function () {
 				fileName,
 				JSON.stringify(cusFileModel, null, 2),
 				function writeJSON(err) {
-					if (err) return console.log(err);
+					if (err) return log.error(`Failed to create temporary file: ${fileName}`);
 				}
 			);
 		});
