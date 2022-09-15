@@ -1,8 +1,8 @@
 let assert = require('assert');
 const fs = require('fs');
-const log = require('../../../services/logger')('SubscribersRepositoryTest');
-const Subscriber = require('../../../models/subscriber.model');
-const SubscriberRepository = require('../../../repository/subscribers.repository');
+const log = require('../../../../services/logger')('SubscribersRepositoryTest');
+const Subscriber = require('../../../../models/subscriber.model');
+const SubscriberRepository = require('../../../../repository/subscriber/subscriber-file.repository');
 
 let fileModel = {
 	name: 'Emails of subscribers',
@@ -23,7 +23,7 @@ describe('SubscriberRepository', function () {
 			let subscriberRepository = new SubscriberRepository(fileName);
 
 			subscriberRepository.append(subscriber);
-			let result = require('../../../' + fileName);
+			let result = require('../../../../' + fileName);
 
 			assert.ok(result.users.some((item) => item.email === email));
 		});
@@ -50,7 +50,7 @@ describe('SubscriberRepository', function () {
 			let subscriberRepository = new SubscriberRepository(fileName);
 
 			subscriberRepository.remove(subscriber);
-			let result = require('../../../' + fileName);
+			let result = require('../../../../' + fileName);
 
 			assert.ok(!result.users.some((item) => item.email === emailToRemove));
 		});

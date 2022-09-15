@@ -16,20 +16,23 @@ class TestProvider extends BaseProvider {
 	testOptions = testOptions;
 	cacheData = {
 		cacheActive: false,
-		cacheExpireInSeconds: 300,
-		cacheService: new NodeCache({ stdTTL: this.cacheData.cacheExpireInSeconds }),
+		cacheExpireInSeconds: process.env.CACHE_EXPIRE_SECONDS,
+		cacheService: undefined,
 	};
 
 	constructor(options = testOptions) {
 		super();
 		this.testOptions = options;
+		this.cacheData.cacheService = new NodeCache({
+			stdTTL: this.cacheData.cacheExpireInSeconds.toString(),
+		});
 	}
 
 	async getBtcUahRateAsync() {
 		let cacheName = 'BTC_UAH_RATE';
 		if (this.testOptions.fail) return null;
 		if (this.cacheData.cacheActive && this.cacheData.cacheService.get(cacheName)) {
-			log.debug('Cache used for request getBtcUahRateAsync');
+			log.debug(`Cache used for request ${cacheName}`);
 			return Number(this.cacheData.cacheService.get(cacheName));
 		}
 		const url = process.env.TEST_PROVIDER_URL;
@@ -38,10 +41,15 @@ class TestProvider extends BaseProvider {
 			headers: {
 				'Content-Type': 'application/json',
 			},
+		}).catch((error) => {
+			log.error(`Request '${cacheName}' failed. ${error}`);
+			return null;
 		});
-		if (!response.ok) {
+		if (!response || !response.ok) {
 			log.error(
-				`Failed to fetch btc uah rate. Error [${response.status}]: ${await response.text()}`
+				`Wrong answer from request '${cacheName}'. Error [${
+					response?.status || 'Wrong response'
+				}]: ${(await response?.text()) || 'Wrong response'}`
 			);
 			return null;
 		}
@@ -53,7 +61,9 @@ class TestProvider extends BaseProvider {
 			if (this.cacheData.cacheActive) this.cacheData.cacheService.set(cacheName, rate);
 			return Number(rate);
 		} catch (e) {
-			log.error(`Failed to validate answer from ${this.providerName}. Error: ${e}`);
+			log.error(
+				`Invalid value or response from request '${cacheName}. Possible API was changed. Error: ${e}`
+			);
 			return null;
 		}
 	}

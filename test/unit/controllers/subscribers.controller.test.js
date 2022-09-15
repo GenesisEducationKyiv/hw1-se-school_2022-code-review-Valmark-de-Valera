@@ -66,7 +66,7 @@ describe('SubscribersController', function () {
 		});
 	});
 	describe('#getAllSubscribers', function () {
-		it('should return subscribers array', async function () {
+		it('should return subscriber array', async function () {
 			await SubscribersController.getAllSubscribers(response);
 
 			const sendArg = response.send.getCall(0).args[0];

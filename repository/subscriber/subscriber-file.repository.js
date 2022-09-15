@@ -1,38 +1,40 @@
 const fs = require('fs');
-const log = require('../services/logger')('SubscribersRepository');
+const log = require('../../services/logger')('SubscriberFileRepository');
+const SubscribersBaseRepository = require('./base/subscriber-base.repository');
 let fileName = 'data/subscribers.json';
-let databaseFile = require('../' + fileName);
+let databaseFile = require('../../' + fileName);
 let subscribers = databaseFile.users;
 
-class SubscribersRepository {
+class SubscriberFileRepository extends SubscribersBaseRepository {
 	constructor(customFileName = undefined) {
+		super();
 		if (customFileName) {
 			fileName = customFileName;
-			databaseFile = require('../' + customFileName);
+			databaseFile = require('../../' + customFileName);
 			subscribers = databaseFile.users;
 		}
 	}
 
 	append(subscriber) {
-		if (this.includesEmail(subscriber?.email)) return false;
+		if (this.isEmailExist(subscriber?.email)) return false;
 		subscribers.push(subscriber);
-		this.updateDb();
+		this.save();
 		return true;
 	}
 
 	remove(subscriber) {
-		if (!this.includesEmail(subscriber?.email)) return false;
+		if (!this.isEmailExist(subscriber?.email)) return false;
 		const index = subscribers.indexOf(subscriber);
 		subscribers.splice(index, 1);
-		this.updateDb();
+		this.save();
 		return true;
 	}
 
-	includesEmail(email) {
+	isEmailExist(email) {
 		return subscribers.some((item) => item.email === email);
 	}
 
-	findEmail(email) {
+	getByEmail(email) {
 		return subscribers.find((item) => {
 			return item.email === email;
 		});
@@ -42,7 +44,7 @@ class SubscribersRepository {
 		return subscribers;
 	}
 
-	updateDb() {
+	save() {
 		databaseFile.users = subscribers;
 		fs.writeFile(fileName, JSON.stringify(databaseFile, null, 2), function writeJSON(err) {
 			if (err) return log.error(err);
@@ -51,4 +53,4 @@ class SubscribersRepository {
 	}
 }
 
-module.exports = SubscribersRepository;
+module.exports = SubscriberFileRepository;

@@ -1,4 +1,4 @@
-const SubscribersRepository = require('../../repository/subscribers.repository');
+const SubscribersRepository = require('../../repository/subscriber/subscriber-file.repository');
 const Subscriber = require('../../models/subscriber.model');
 
 class SubscribersService {
@@ -9,7 +9,7 @@ class SubscribersService {
 	}
 
 	unsubscribe(email) {
-		let subscriber = this.subscribersRepository.findEmail(email);
+		let subscriber = this.subscribersRepository.getByEmail(email);
 		return this.subscribersRepository.remove(subscriber);
 	}
 
@@ -18,7 +18,7 @@ class SubscribersService {
 	}
 
 	isSubscribed(email) {
-		return this.subscribersRepository.includesEmail(email);
+		return this.subscribersRepository.isEmailExist(email);
 	}
 }
 

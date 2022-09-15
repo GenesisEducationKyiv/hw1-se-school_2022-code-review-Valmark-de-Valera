@@ -42,7 +42,7 @@ class RatesService {
 				);
 				return false;
 		}
-		log.info(`Success change provider: ${this.provider.providerName}`);
+		log.info(`Success set provider: ${this.provider.providerName}`);
 		return true;
 	}
 
