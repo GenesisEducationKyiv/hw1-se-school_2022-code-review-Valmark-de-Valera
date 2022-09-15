@@ -13,12 +13,12 @@ describe('RatesController', function () {
 	before(function () {
 		sinon.spy(response, 'send');
 	});
-	describe('#getLastRateAsync', function () {
+	describe('#getBtcUahRateAsync', function () {
 		it('should return rate as number', async function () {
 			await RatesController.getBtcUahRateAsync(response);
 			if (response.send.calledOnce) {
 				const sendArg = response.send.getCall(0).args[0];
-				if (isNaN(sendArg))
+				if (!sendArg || isNaN(sendArg))
 					assert.fail(`Provider should return number, not this: ${sendArg}`);
 			} else assert.fail(`Controller should call send()`);
 

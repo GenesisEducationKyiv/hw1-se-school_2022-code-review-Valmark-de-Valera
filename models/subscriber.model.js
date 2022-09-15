@@ -1,6 +1,7 @@
 const { validateEmail } = require('../services/utils');
 
 function Subscriber(email) {
+	if (!validateEmail(email)) throw new Error('Invalid email address');
 	this.email = email || null;
 }
 

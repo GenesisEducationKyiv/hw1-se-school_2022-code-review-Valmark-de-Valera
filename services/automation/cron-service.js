@@ -1,4 +1,5 @@
 const cron = require('node-cron');
+const log = require('../logger')('AutomationCronService');
 const SubscribersController = require('../../controllers/subscribers.controller');
 
 class AutomationCronService {
@@ -7,10 +8,7 @@ class AutomationCronService {
 		// Config: minute | hour | day_of_month | month | day_of_week
 		// * means every [time]
 		cron.schedule('0 9 * * *', function () {
-			console.log('----------------------');
-			console.log('-- Running Cron Job --');
-			console.log('----------------------');
-
+			log.info('Send mails automation executed successfully');
 			SubscribersController.sendEmailsAsync();
 		});
 	}

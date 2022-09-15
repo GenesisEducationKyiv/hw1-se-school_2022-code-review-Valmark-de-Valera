@@ -1,22 +1,15 @@
-const fetch = require('node-fetch');
 const { providersNamesDict, providersKeysDict } = require('../const/providers.const');
+const BaseProvider = require('./base/base.provider');
+const TestRateService = require('../provider-services/rate-services/test.rate-service');
 require('dotenv').config();
 
-class TestProvider {
+class TestProvider extends BaseProvider {
 	providerName = providersNamesDict.test;
 	providerKey = providersKeysDict.test;
-	token = process.env.TestProviderToken;
+	token = process.env.TEST_PROVIDER_TOKEN;
 
-	async getBtcUahRateAsync() {
-		const url = process.env.TestProviderUrl;
-		const response = await fetch(url, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		});
-		const json = await response.json();
-		return Number(json.data.id);
+	createRateService() {
+		return new TestRateService(this.token);
 	}
 }
 

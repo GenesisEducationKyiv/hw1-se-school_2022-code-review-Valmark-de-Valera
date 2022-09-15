@@ -1,6 +1,7 @@
+const log = require('../services/logger')('SubscribersController');
 const { validateEmail } = require('../services/utils');
 const EmailService = require('../services/email/email-service');
-const RateService = require('../services/rates/rates-service');
+const RateService = require('../services/rates/finance-service');
 const SubscribersService = require('../services/subscriber/subscriber-service');
 
 class SubscribersController {
@@ -51,7 +52,6 @@ class SubscribersController {
 		const resultArray = [];
 		const receiversEmail = [];
 		receivers.map((item) => receiversEmail.push(item.email));
-		console.log(`Sending emails to subscribers: ${receiversEmail}`);
 		for (const item of receiversEmail) {
 			resultArray.push({
 				email: item,
@@ -61,7 +61,7 @@ class SubscribersController {
 				),
 			});
 		}
-		console.log(resultArray);
+		log.info('Sent rate to emails with result: ${resultArray}');
 		if (resultArray.length) response?.send(resultArray);
 		else response?.status(204);
 		return resultArray;

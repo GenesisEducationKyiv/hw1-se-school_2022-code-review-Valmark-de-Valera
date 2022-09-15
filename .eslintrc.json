@@ -15,6 +15,7 @@
         "no-unused-vars": ["error"],
         "no-invalid-regexp": ["error"],
         "no-irregular-whitespace": ["error"],
+        "no-console": "warn",
         "prettier/prettier":
         [
             "error",

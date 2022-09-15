@@ -1,22 +1,15 @@
-const fetch = require('node-fetch');
+const BaseProvider = require('./base/base.provider');
+const BinanceRateService = require('../provider-services/rate-services/binance.rate-service');
 const { providersNamesDict, providersKeysDict } = require('../const/providers.const');
 require('dotenv').config();
 
-class BinanceProvider {
+class BinanceProvider extends BaseProvider {
 	providerName = providersNamesDict.binance;
 	providerKey = providersKeysDict.binance;
-	token = process.env.BinanceProviderToken;
+	token = process.env.BINANCE_PROVIDER_TOKEN;
 
-	async getBtcUahRateAsync() {
-		const url = process.env.BinanceProviderUrl;
-		const response = await fetch(url, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		});
-		const json = await response.json();
-		return Number(json.price);
+	createRateService() {
+		return new BinanceRateService(this.token);
 	}
 }
 
