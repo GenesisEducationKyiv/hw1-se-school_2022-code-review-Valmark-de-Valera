@@ -25,11 +25,11 @@ const router = (app) => {
 	});
 	app.put('/api/changeProviderByName', (request, response) => {
 		let name = request.body.name;
-		RatesController.changeProviderByNameAsync(name, response);
+		RatesController.changeProviderByName(name, response);
 	});
 	app.put('/api/changeProviderByKey', (request, response) => {
 		let key = request.body.key;
-		RatesController.changeProviderByKeyAsync(key, response);
+		RatesController.changeProviderByKey(key, response);
 	});
 };
 

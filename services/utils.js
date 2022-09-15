@@ -4,4 +4,9 @@ function validateEmail(email) {
 	return regex.test(email);
 }
 
-module.exports = { validateEmail };
+function isExpireBySeconds(date, secondsToExpire) {
+	let today = new Date();
+	return today.getTime() >= date.getTime() + secondsToExpire * 1000;
+}
+
+module.exports = { validateEmail, isExpireBySeconds };

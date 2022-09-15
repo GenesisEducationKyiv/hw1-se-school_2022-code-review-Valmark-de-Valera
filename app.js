@@ -3,13 +3,13 @@ const swaggerDocument = require('./swagger.json');
 const express = require('express');
 const bodyParser = require('body-parser');
 const routes = require('./routes/routes');
-const log = require('services/logger')('App');
+const log = require('./services/logger')('App');
 const app = express();
 require('dotenv').config();
 
 // Settings
-const host = process.env.ServerHost;
-const port = process.env.ServerPort;
+const host = process.env.SERVER_HOST;
+const port = process.env.SERVER_PORT;
 
 app.use(bodyParser.json());
 app.use(

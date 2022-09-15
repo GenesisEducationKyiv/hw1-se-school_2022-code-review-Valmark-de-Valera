@@ -7,8 +7,8 @@ const {
 class RatesController {
 	static rateService = new RatesService();
 
-	static async changeProviderByNameAsync(name, response = undefined) {
-		const result = await this.rateService.changeProviderByNameAsync(name);
+	static changeProviderByName(name, response = undefined) {
+		const result = this.rateService.changeProviderByName(name);
 		if (result) response?.send('Провайдер успішно змінено');
 		else
 			response
@@ -20,8 +20,8 @@ class RatesController {
 				);
 	}
 
-	static async changeProviderByKeyAsync(key, response = undefined) {
-		const result = await this.rateService.changeProviderByKeyAsync(key);
+	static changeProviderByKey(key, response = undefined) {
+		const result = this.rateService.changeProviderByKey(key);
 		if (result) response?.send('Провайдер успішно змінено');
 		else
 			response
@@ -35,7 +35,7 @@ class RatesController {
 
 	static async getBtcUahRateAsync(response = undefined) {
 		const rateValue = await this.rateService.getBtcUahRateAsync();
-		if (!isNaN(rateValue)) response?.send(rateValue.toFixed());
+		if (rateValue && !isNaN(rateValue)) response?.send(rateValue.toFixed());
 		else response?.status(400).send('Помилка виконання запиту');
 	}
 }

@@ -9,6 +9,8 @@ const logger = winston.createLogger({
 				options.moduleName = options.moduleName ? (options.moduleName += ':') : '';
 				return `[${options.moduleName}${options.level}] ${options.message}`;
 			}),
+			prettyPrint: true,
+			colorize: true,
 		}),
 	],
 });
