@@ -1,7 +1,7 @@
 const log = require('../services/logger')('SubscribersController');
 const { validateEmail } = require('../services/utils');
 const EmailService = require('../services/email/email-service');
-const RateService = require('../services/rates/rates-service');
+const RateService = require('../services/rates/finance-service');
 const SubscribersService = require('../services/subscriber/subscriber-service');
 
 class SubscribersController {

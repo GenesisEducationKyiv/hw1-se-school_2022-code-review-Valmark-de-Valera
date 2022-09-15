@@ -1,10 +1,10 @@
 let assert = require('assert');
-const TestProvider = require('../../../../../services/rates/providers/test.provider');
+const TestRateService = require('../../../../../services/rates/provider-services/rate-services/test.rate-service');
 
-describe('TestProvider', function () {
+describe('TestRateService', function () {
 	describe('#getBtcUahRateAsync', function () {
 		it('should return rate as number', async function () {
-			const provider = new TestProvider();
+			const provider = new TestRateService();
 
 			const result = await provider.getBtcUahRateAsync();
 
@@ -13,7 +13,8 @@ describe('TestProvider', function () {
 			assert.ok(true);
 		});
 		it('should return null', async function () {
-			const provider = new TestProvider({ fail: true });
+			process.env.TEST_PROVIDER_FAIL = true;
+			const provider = new TestRateService();
 
 			const result = await provider.getBtcUahRateAsync();
 

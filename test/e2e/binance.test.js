@@ -1,6 +1,6 @@
 let assert = require('assert');
 const puppeteer = require('puppeteer');
-const BinanceProvider = require('../../services/rates/providers/binance.provider');
+const BinanceRateService = require('../../services/rates/provider-services/rate-services/binance.rate-service');
 
 describe('Binance E2E Tests', function () {
 	this.timeout(60000);
@@ -29,14 +29,14 @@ describe('Binance E2E Tests', function () {
 	});
 	it('should check if rate on website the same as via API', async function () {
 		const priceSelector = 'div.showPrice';
-		const provider = new BinanceProvider();
+		const binanceRateService = new BinanceRateService();
 
 		await page.goto('https://www.binance.com/uk-UA/trade/BTC_UAH');
 		await page.waitForSelector(priceSelector);
 		let resultWeb = await page.evaluate(() => {
 			return document.getElementsByClassName('showPrice')[0].innerHTML;
 		});
-		const resultApi = await provider.getBtcUahRateAsync();
+		const resultApi = await binanceRateService.getBtcUahRateAsync();
 		resultWeb = resultWeb.replaceAll(',', '');
 
 		if (parseFloat(resultWeb) !== resultApi)

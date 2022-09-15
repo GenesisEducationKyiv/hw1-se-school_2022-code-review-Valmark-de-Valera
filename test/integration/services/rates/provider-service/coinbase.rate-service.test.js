@@ -1,10 +1,10 @@
 let assert = require('assert');
-const CoinbaseProvider = require('../../../../../services/rates/providers/coinbase.provider');
+const CoinbaseRateService = require('../../../../../services/rates/provider-services/rate-services/coinbase.rate-service');
 
-describe('CoinbaseProvider', function () {
+describe('CoinbaseRateService', function () {
 	describe('#getBtcUahRateAsync', function () {
 		it('should return rate as number', async function () {
-			const provider = new CoinbaseProvider();
+			const provider = new CoinbaseRateService();
 
 			const result = await provider.getBtcUahRateAsync();
 

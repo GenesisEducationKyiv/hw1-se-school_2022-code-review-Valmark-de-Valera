@@ -1,15 +1,11 @@
+/* eslint-disable no-unused-vars */
 class BaseProvider {
 	providerName;
 	providerKey;
 	token;
-	cacheData = {
-		cacheActive: false,
-		cacheExpireInSeconds: 300,
-		cacheService: undefined,
-	};
 
-	async getBtcUahRateAsync() {
-		throw new Error('getBtcUahRateAsync is not implemented');
+	createRateService(token) {
+		throw new Error(`Method 'createRateService' is not implemented`);
 	}
 }
 

@@ -1,10 +1,10 @@
 let assert = require('assert');
-const BinanceProvider = require('../../../../../services/rates/providers/binance.provider');
+const NomicsRateService = require('../../../../../services/rates/provider-services/rate-services/nomics.rate-service');
 
-describe('BinanceProvider', function () {
+describe('NomicsRateService', function () {
 	describe('#getBtcUahRateAsync', function () {
 		it('should return rate as number', async function () {
-			const provider = new BinanceProvider();
+			const provider = new NomicsRateService();
 
 			const result = await provider.getBtcUahRateAsync();
 
