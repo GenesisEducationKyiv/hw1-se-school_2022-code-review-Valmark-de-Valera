@@ -176,7 +176,7 @@
             "description": "Ім'я провайдера (З великої літери)",
             "required": true,
             "type": "string",
-            "enum": ["Binance", "Test", "[WrongToTest]"]
+            "enum": ["Binance", "Coinbase", "Kuna", "Nomics", "Test", "[WrongToTest]"]
           }
         ],
         "responses": {
@@ -210,7 +210,7 @@
             "description": "Код провайдера",
             "required": true,
             "type": "string",
-            "enum": ["binance-pk", "test-pk", "[WrongToTest]"]
+            "enum": ["binance-pk", "coinbase-pk", "kuna-pk", "nomics-pk", "test-pk", "[WrongToTest]"]
           }
         ],
         "responses": {
