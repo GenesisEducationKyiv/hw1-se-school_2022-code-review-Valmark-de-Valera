@@ -14,7 +14,7 @@ class FileSubscriberRepository implements ISubscriberRepository {
 	private readonly databaseFile = require('../../../' + fileName);
 	private readonly subscribers = this.databaseFile.subscribers;
 
-	public constructor(customFileName = undefined) {
+	public constructor(customFileName: string | undefined = undefined) {
 		if (customFileName) {
 			fileName = customFileName;
 			this.databaseFile = require('../../../' + customFileName);

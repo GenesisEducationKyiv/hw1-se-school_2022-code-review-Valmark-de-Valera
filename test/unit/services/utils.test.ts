@@ -1,6 +1,5 @@
-const assert = require('assert');
-const { faker } = require('@faker-js/faker');
-const { validateEmail, isExpireBySeconds } = require('../../../src/services/utils');
+import { faker } from '@faker-js/faker';
+import { validateEmail, isExpireBySeconds } from '../../../src/services/utils';
 
 describe('Utils', function () {
 	describe('#validateEmail', function () {
@@ -9,19 +8,15 @@ describe('Utils', function () {
 			for (let i = 0; i < 10; i++) emailArr.push(faker.internet.email());
 
 			emailArr.map(function (item) {
-				if (!validateEmail(item)) assert.fail(`Email should be valid: ${item}`);
+				if (!validateEmail(item)) fail(`Email should be valid: ${item}`);
 			});
-
-			assert.ok(true);
 		});
 		it('should invalidate test emails', function () {
 			const emailArr = ['test@test.', 'test.set@test', 'test.test@'];
 
 			emailArr.map(function (item) {
-				if (validateEmail(item)) assert.fail(`Email should not be valid: ${item}`);
+				if (validateEmail(item)) fail(`Email should not be valid: ${item}`);
 			});
-
-			assert.ok(true);
 		});
 	});
 	describe('#isExpireBySeconds', function () {
@@ -32,7 +27,7 @@ describe('Utils', function () {
 
 			const result = isExpireBySeconds(oldDate, minuteBeforeExpire * 60);
 
-			assert.ok(!result);
+			expect(result).toBeFalsy();
 		});
 		it('should return true (expire)', function () {
 			const minuteBeforeExpire = 2;
@@ -41,7 +36,7 @@ describe('Utils', function () {
 
 			const result = isExpireBySeconds(oldDate, minuteBeforeExpire * 60);
 
-			assert.ok(result);
+			expect(result).toBeTruthy();
 		});
 	});
 });

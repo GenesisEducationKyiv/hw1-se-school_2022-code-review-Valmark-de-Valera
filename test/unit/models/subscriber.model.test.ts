@@ -1,20 +1,21 @@
-const assert = require('assert');
-const Subscriber = require('../../../src/models/subscriber/subscriber.model');
+import Subscriber from '../../../src/models/subscriber/subscriber.model';
+
+let subscriber: Subscriber;
+
+beforeAll(() => {
+	subscriber = new Subscriber('test@test.com');
+});
 
 describe('Subscriber', function () {
 	describe('#setEmail', function () {
-		let subscriber;
-		before(function () {
-			subscriber = new Subscriber('test@test.com');
-		});
 		it('should set new email', function () {
 			const oldEmail = subscriber.getEmail();
 			const newEmail = 'test2@test.com';
 
 			const result = subscriber.setEmail(newEmail);
 
-			assert.notEqual(subscriber.getEmail(), oldEmail);
-			assert.ok(result);
+			expect(result).toBeTruthy();
+			expect(subscriber.getEmail()).not.toEqual(oldEmail);
 		});
 		it('should reject fake string', function () {
 			const oldEmail = subscriber.getEmail();
@@ -22,8 +23,8 @@ describe('Subscriber', function () {
 
 			const result = subscriber.setEmail(newEmail);
 
-			assert.equal(subscriber.getEmail(), oldEmail);
-			assert.ok(!result);
+			expect(result).toBeFalsy();
+			expect(subscriber.getEmail()).toEqual(oldEmail);
 		});
 	});
 });

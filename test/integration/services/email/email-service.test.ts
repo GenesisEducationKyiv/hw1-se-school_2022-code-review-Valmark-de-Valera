@@ -1,5 +1,4 @@
-const assert = require('assert');
-const EmailService = require('../../../../src/services/email/email-service');
+import EmailService from '../../../../src/services/email/email-service';
 
 describe('EmailService', function () {
 	describe('#sendRateMailAsync', function () {
@@ -9,7 +8,7 @@ describe('EmailService', function () {
 
 			const result = await emailService.sendRateMailAsync(email, 0);
 
-			assert.ok(result);
+			expect(result).toBeTruthy();
 		});
 	});
 });

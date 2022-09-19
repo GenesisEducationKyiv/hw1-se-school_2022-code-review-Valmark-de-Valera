@@ -1,21 +1,25 @@
-const assert = require('assert');
-const fs = require('fs');
-const log = require('../../../../src/services/logger')('SubscribersRepositoryTest');
-const Subscriber = require('../../../../src/models/subscriber/subscriber.model');
-const SubscriberRepository = require('../../../../src/repository/subscriber/file.subscriber.repository');
+/* eslint-disable @typescript-eslint/no-var-requires */
+import fs from 'fs';
+import Subscriber from '../../../../src/models/subscriber/subscriber.model';
+import logFab from '../../../../src/services/logger';
+const fileModel = require('../../../../data/subscribers.json');
+import FileSubscriberRepository from '../../../../src/repository/subscriber/file.subscriber.repository';
+import 'dotenv/config';
+const log = logFab('SubscribersRepositoryTest');
 
-const fileModel = {
-	name: 'Emails of subscribers',
-	users: [],
-};
+interface FileSubscriberModel {
+	email: string;
+}
 
 describe('SubscriberRepository', function () {
 	describe('#append', function () {
 		const fileName = '.tmpTestAdd.json';
-		before(function () {
-			fs.writeFileSync(fileName, JSON.stringify(fileModel, null, 2), function writeJSON(err) {
-				if (err) return log.error(`Failed to create temporary file: ${fileName}`);
-			});
+		beforeAll(function () {
+			try {
+				fs.writeFileSync(fileName, JSON.stringify(fileModel, null, 2));
+			} catch (e) {
+				if (e) log.error(`Failed to create temporary file: ${fileName}`);
+			}
 		});
 		it('should create temp file and add new subscriber email', function () {
 			const email = 'test@test.com';
@@ -25,25 +29,25 @@ describe('SubscriberRepository', function () {
 			subscriberRepository.append(subscriber);
 			const result = require('../../../../' + fileName);
 
-			assert.ok(result.users.some((item) => item.email === email));
+			expect(
+				result.subscribers.some((item: FileSubscriberModel) => item.email === email)
+			).toBeTruthy();
 		});
-		after(function (callback) {
+		afterAll(function (callback) {
 			fs.unlink(fileName, callback);
 		});
 	});
 	describe('#remove', function () {
 		const fileName = '.tmpTestRemove.json';
 		const emailToRemove = 'test@test.com';
-		before(function () {
-			const cusFileModel = fileModel;
-			cusFileModel.users.push(new Subscriber(emailToRemove));
-			fs.writeFileSync(
-				fileName,
-				JSON.stringify(cusFileModel, null, 2),
-				function writeJSON(err) {
-					if (err) return log.error(`Failed to create temporary file: ${fileName}`);
-				}
-			);
+		beforeAll(function () {
+			try {
+				const cusFileModel = fileModel;
+				cusFileModel.subscribers.push({ email: emailToRemove });
+				fs.writeFileSync(fileName, JSON.stringify(cusFileModel, null, 2));
+			} catch (e) {
+				if (e) log.error(`Failed to create temporary file: ${fileName}`);
+			}
 		});
 		it('should create temp file and and check if email was removed', function () {
 			const subscriber = new Subscriber(emailToRemove);
@@ -52,9 +56,11 @@ describe('SubscriberRepository', function () {
 			subscriberRepository.remove(subscriber);
 			const result = require('../../../../' + fileName);
 
-			assert.ok(!result.users.some((item) => item.email === emailToRemove));
+			expect(
+				result.subscribers.some((item: FileSubscriberModel) => item.email === emailToRemove)
+			).toBeFalsy();
 		});
-		after(function (callback) {
+		afterAll(function (callback) {
 			fs.unlink(fileName, callback);
 		});
 	});

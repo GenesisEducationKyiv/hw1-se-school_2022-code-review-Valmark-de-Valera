@@ -1,9 +1,8 @@
-const assert = require('assert');
-const FinanceService = require('../../../../src/services/rates/finance-service');
-const {
+import FinanceService from '../../../../src/services/rates/finance-service';
+import {
 	providersNamesDict,
 	providersKeysDict,
-} = require('../../../../src/services/rates/const/providers.const');
+} from '../../../../src/services/rates/const/providers.const';
 
 describe('FinanceService', function () {
 	describe('#setActiveProviderByName', function () {
@@ -11,22 +10,19 @@ describe('FinanceService', function () {
 			const financeService = new FinanceService();
 
 			for (const key in providersNamesDict) {
-				if (!financeService.setActiveProviderByName(providersNamesDict[key])) {
-					assert.fail(
-						`Provider object with name '${providersNamesDict[key]}' is not valid`
-					);
+				const provider = providersNamesDict[key as keyof typeof providersNamesDict];
+				if (!financeService.setActiveProviderByName(provider)) {
+					fail(`Provider object with name '${provider}' is not valid`);
 				}
 			}
-
-			assert.ok(true);
 		});
 		it('should not change rate provider', function () {
 			const financeService = new FinanceService();
-			const providerName = null;
+			const providerName = '';
 
 			const result = financeService.setActiveProviderByName(providerName);
 
-			assert.ok(!result);
+			expect(result).toBeFalsy();
 		});
 	});
 	describe('#setActiveProviderByKey', function () {
@@ -34,14 +30,11 @@ describe('FinanceService', function () {
 			const financeService = new FinanceService();
 
 			for (const key in providersKeysDict) {
-				if (!financeService.setActiveProviderByKey(providersKeysDict[key])) {
-					assert.fail(
-						`Provider object with key '${providersKeysDict[key]}' is not valid`
-					);
+				const provider = providersKeysDict[key as keyof typeof providersKeysDict];
+				if (!financeService.setActiveProviderByKey(provider)) {
+					fail(`Provider object with key '${provider}' is not valid`);
 				}
 			}
-
-			assert.ok(true);
 		});
 	});
 });

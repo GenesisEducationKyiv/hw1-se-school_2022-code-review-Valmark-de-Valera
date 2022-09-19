@@ -27,3 +27,5 @@ app.listen(port, host, (error?: number) => {
 	if (error) return log.error(error);
 	log.info(`Server running on ${host}:${port}`);
 });
+
+export default app;

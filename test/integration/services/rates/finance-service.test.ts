@@ -1,6 +1,5 @@
-const assert = require('assert');
-const FinanceService = require('../../../../src/services/rates/finance-service');
-const { providersKeysDict } = require('../../../../src/services/rates/const/providers.const');
+import FinanceService from '../../../../src/services/rates/finance-service';
+import { providersKeysDict } from '../../../../src/services/rates/const/providers.const';
 
 describe('FinanceService', function () {
 	describe('#getBtcUahRateAsync', function () {
@@ -11,24 +10,22 @@ describe('FinanceService', function () {
 			const result = await financeService.getBtcUahRateAsync();
 
 			if (!result || isNaN(result))
-				assert.fail(
+				fail(
 					`Service should change rate provider and return valid number, not this: ${result}`
 				);
-			assert.ok(true);
 		});
 		it('should change provider if it return wrong value', async function () {
 			const financeService = new FinanceService();
 			financeService.autoChangeUnavailableProviders = true;
 			financeService.setActiveProviderByKey(providersKeysDict.test);
-			process.env.TEST_PROVIDER_FAIL = true;
+			process.env.TEST_PROVIDER_FAIL = String(true);
 
 			const result = await financeService.getBtcUahRateAsync();
 
 			if (!result || isNaN(result))
-				assert.fail(
+				fail(
 					`Service should change rate provider and return valid number, not this: ${result}`
 				);
-			assert.ok(true);
 		});
 	});
 });

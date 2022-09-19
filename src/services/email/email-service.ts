@@ -3,6 +3,7 @@ import handlebars, { Exception } from 'handlebars';
 import { promises as fs } from 'fs';
 import logFab from '../logger';
 import 'dotenv/config';
+import { validateEmail } from '../utils';
 const log = logFab('EmailService');
 
 class EmailService {
@@ -24,7 +25,7 @@ class EmailService {
 	}
 
 	async sendRateMailAsync(email: string, rate: number): Promise<boolean> {
-		if (!email) return false;
+		if (!validateEmail(email)) return false;
 		try {
 			const htmlTemplate = await fs.readFile('src/templates/mail-template.html', {
 				encoding: 'utf-8',
