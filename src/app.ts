@@ -9,7 +9,7 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../swagger.json';
 
 // Settings
-const host = process.env.SERVER_HOST || 'localhost';
+const host = process.env.SERVER_HOST || '0.0.0.0';
 const port = Number(process.env.SERVER_PORT || '8080');
 
 app.use(bodyParser.json());

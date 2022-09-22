@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node src/app.ts",
     "dev": "nodemon src/app.ts",
+    "build": "tsc -b",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "test:unit": "jest --testPathPattern=test/unit",
