@@ -1,16 +1,19 @@
 {
     "env": {
         "browser": true,
-        "commonjs": true,
         "es2021": true
     },
     "extends": [
-        "plugin:prettier/recommended"
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
     ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": "latest"
+        "ecmaVersion": "latest",
+        "sourceType": "module"
     },
-    "plugins": ["prettier"],
+    "plugins": ["@typescript-eslint", "prettier"],
     "rules": {
         "no-unused-vars": ["error"],
         "no-invalid-regexp": ["error"],
@@ -20,13 +23,13 @@
         [
             "error",
             {
+                "parser": "typescript",
                 "singleQuote": true,
                 "useTabs": true,
                 "tabWidth": 4,
                 "semi": true,
                 "bracketSpacing": true,
                 "requirePragma": false,
-                "parser": "flow",
                 "arrowParens": "always",
                 "printWidth": 100
             }
