@@ -1,17 +1,30 @@
 import { providersNamesDict, providersKeysDict } from './const/providers.const';
-import CoinbaseProvider from './providers/coinbase.provider';
-import BinanceProvider from './providers/binance.provider';
-import TestProvider from './providers/test.provider';
-import KunaProvider from './providers/kuna.provider';
-import NomicsProvider from './providers/nomics.provider';
 import logFab from '../logger';
-import 'dotenv/config';
 import IProvider from './providers/interfaces/interface.provider';
+import { inject, injectable } from 'inversify';
+import { DIServices } from '../../DITypes';
+import FinanceProviderFabric from './finance-provider.fabric';
+import 'dotenv/config';
+import ICacheService from '../cache/interfaces/interface.cache-service';
 const log = logFab('FinanceService');
 
+@injectable()
 class FinanceService {
+	private _financeProviderFabric: FinanceProviderFabric;
+	private _cacheService: ICacheService;
 	public activeProviderKey = process.env.CRYPTO_CURRENCY_PROVIDER || 'binance-pk';
 	public autoChangeUnavailableProviders = process.env.AUTOCHANGE_UNAVAILABLE_PROVIDER || true;
+	private cacheRateConfig = {
+		cacheActive: true,
+	};
+
+	constructor(
+		@inject(DIServices.FinanceProviderFabric) financeProviderFabric: FinanceProviderFabric,
+		@inject(DIServices.CacheService) cacheService: ICacheService
+	) {
+		this._financeProviderFabric = financeProviderFabric;
+		this._cacheService = cacheService;
+	}
 
 	public setActiveProviderByName(name: string) {
 		const key = Object.keys(providersNamesDict).find(
@@ -27,11 +40,17 @@ class FinanceService {
 			return false;
 		}
 		this.activeProviderKey = key;
+		this._cacheService.flushAll();
 		return true;
 	}
 
 	public async getBtcUahRateAsync(): Promise<number | null> {
-		let providerInstance = this.getNewInstanceOfProviderByKey(this.activeProviderKey);
+		const cacheName = 'BTC_UAH_RATE';
+		if (this.cacheRateConfig.cacheActive && this._cacheService?.get(cacheName)) {
+			log.debug(`Cache used for request ${cacheName}`);
+			return Number(this._cacheService?.get(cacheName));
+		}
+		let providerInstance = this._financeProviderFabric.getProviderByKey(this.activeProviderKey);
 		let rateValue = await this.getBtcUahRateFromProviderAsync(providerInstance);
 		if (!rateValue || isNaN(rateValue)) {
 			log.error(
@@ -43,7 +62,7 @@ class FinanceService {
 				for (const key in providersKeysDict) {
 					const providerKey = providersKeysDict[key as keyof typeof providersKeysDict];
 					if (providerKey !== this.activeProviderKey) {
-						providerInstance = this.getNewInstanceOfProviderByKey(
+						providerInstance = this._financeProviderFabric.getProviderByKey(
 							providersKeysDict[key as keyof typeof providersKeysDict]
 						);
 						rateValue = await this.getBtcUahRateFromProviderAsync(providerInstance);
@@ -52,46 +71,13 @@ class FinanceService {
 				}
 			}
 		}
+		if (this.cacheRateConfig.cacheActive && rateValue)
+			this._cacheService.set(cacheName, rateValue.toString());
 		return rateValue;
 	}
 
 	private async getBtcUahRateFromProviderAsync(provider: IProvider): Promise<number | null> {
 		return await provider.createRateService().getBtcUahRateAsync();
-	}
-
-	private getNewInstanceOfProviderByKey(key: string): IProvider {
-		let providerInstance;
-		switch (key) {
-			case providersKeysDict.binance:
-				providerInstance = new BinanceProvider();
-				break;
-			case providersKeysDict.coinbase:
-				providerInstance = new CoinbaseProvider();
-				break;
-			case providersKeysDict.kuna:
-				providerInstance = new KunaProvider();
-				break;
-			case providersKeysDict.nomics:
-				providerInstance = new NomicsProvider();
-				break;
-			case providersKeysDict.test:
-				if (process.env.NODE_ENV === 'test') {
-					providerInstance = new TestProvider();
-				} else {
-					log.error('Test providers are used only for testing purposes!');
-					return this.getNewInstanceOfProviderByKey('DEFAULT');
-				}
-				break;
-			default:
-				log.error(
-					`Unknown or rejected provider with key "${key}". Available providers: ${Object.values(
-						providersKeysDict
-					)}`
-				);
-				return new BinanceProvider();
-		}
-		log.info(`Success set provider: ${providerInstance.providerName}`);
-		return providerInstance;
 	}
 }
 

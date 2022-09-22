@@ -1,8 +1,20 @@
+import 'reflect-metadata';
 import SubscribersController from '../../../src/controllers/subscribers.controller';
 import ResponseMock from '../../mocks/response.mock';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { cleanUpMetadata } from 'inversify-express-utils';
+import RequestMock from '../../mocks/request.mock';
+import { container } from '../../../src/inversify.config';
+import { DIServices } from '../../../src/DITypes';
+import SubscribersService from '../../../src/services/subscriber/subscriber-service';
 
+const request = new RequestMock() as Request;
 const response = new ResponseMock() as Response;
+
+beforeEach((done) => {
+	cleanUpMetadata();
+	done();
+});
 
 afterEach(() => {
 	jest.restoreAllMocks();
@@ -11,10 +23,14 @@ afterEach(() => {
 describe('SubscribersController', function () {
 	describe('#addSubscriber', function () {
 		it('should check invalid email and return status 400', function () {
-			const email = 'test';
+			request.body.email = 'test';
 			const spyStatus = jest.spyOn(response, 'status');
+			const subscribersService: SubscribersService = container.get(
+				DIServices.SubscribersService
+			);
+			const subscriberController = new SubscribersController(subscribersService);
 
-			SubscribersController.addSubscriber(email, response);
+			subscriberController.addSubscriber(request, response);
 
 			expect(spyStatus).toHaveBeenCalled();
 			expect(response.statusCode).toEqual(400);
@@ -22,10 +38,14 @@ describe('SubscribersController', function () {
 	});
 	describe('#removeSubscriber', function () {
 		it('should check invalid email and return status 400', function () {
-			const email = 'test';
+			request.body.email = 'test';
 			const spyStatus = jest.spyOn(response, 'status');
+			const subscribersService: SubscribersService = container.get(
+				DIServices.SubscribersService
+			);
+			const subscriberController = new SubscribersController(subscribersService);
 
-			SubscribersController.removeSubscriber(email, response);
+			subscriberController.removeSubscriber(request, response);
 
 			expect(spyStatus).toHaveBeenCalled();
 			expect(response.statusCode).toEqual(400);
@@ -33,9 +53,13 @@ describe('SubscribersController', function () {
 	});
 	describe('#getAllSubscribers', function () {
 		it('should return subscriber array', function () {
+			const subscribersService: SubscribersService = container.get(
+				DIServices.SubscribersService
+			);
+			const subscriberController = new SubscribersController(subscribersService);
 			const spySend = jest.spyOn(response, 'send');
 
-			SubscribersController.getAllSubscribers(response);
+			subscriberController.getAllSubscribers(request, response);
 
 			expect(spySend).toHaveBeenCalled();
 			if (!Array.isArray(response.statusMessage))

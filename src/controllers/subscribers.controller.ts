@@ -1,48 +1,63 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { validateEmail } from '../services/utils';
 import SubscribersService from '../services/subscriber/subscriber-service';
 import 'dotenv/config';
+import { controller, httpDelete, httpGet, httpPost, interfaces } from 'inversify-express-utils';
+import { DIServices } from '../DITypes';
+import { inject } from 'inversify';
 
-class SubscribersController {
-	static subscribersService = new SubscribersService();
+@controller('/api/subscriber')
+class SubscribersController implements interfaces.Controller {
+	private _subscribersService: SubscribersService;
 
-	static addSubscriber(email: string, response: Response) {
+	constructor(@inject(DIServices.SubscribersService) subscribersService: SubscribersService) {
+		this._subscribersService = subscribersService;
+	}
+
+	@httpPost('/subscribe')
+	addSubscriber(request: Request, response: Response) {
+		const email = request.body?.email || '';
 		if (!validateEmail(email)) {
 			response?.status(400).send('Пошта не є вірною, перевірте введенні дані');
-		} else if (this.subscribersService.subscribe(email)) {
+		} else if (this._subscribersService.subscribe(email)) {
 			response?.send('E-mail додано');
 		} else {
 			response?.status(409).send('Вже є в базі');
 		}
 	}
 
-	static removeSubscriber(email: string, response: Response) {
+	@httpDelete('/unsubscribe')
+	removeSubscriber(request: Request, response: Response) {
+		const email = request.body?.email || '';
 		if (!validateEmail(email)) {
 			response?.status(400).send('Пошта не є вірною, перевірте введенні дані');
-		} else if (this.subscribersService.unsubscribe(email)) {
+		} else if (this._subscribersService.unsubscribe(email)) {
 			response?.send('E-mail видалено');
 		} else {
 			response?.status(404).send('Пошта вже видалена з бази даних');
 		}
 	}
 
-	static async sendEmailsAsync(response: Response) {
-		const resultArray = await this.subscribersService.sendEmailsAsync();
+	@httpPost('/sendEmails')
+	async sendEmailsAsync(request: Request, response: Response) {
+		const resultArray = await this._subscribersService.sendEmailsAsync();
 		if (!resultArray) response?.status(400).send('Помилка виконання запиту до API провайдеру');
 		else if (resultArray?.length) response?.send(resultArray);
 		else response?.status(204).send();
 	}
 
-	static checkIfExist(email: string, response: Response) {
-		if (this.subscribersService.isSubscribed(email)) {
+	checkIfExist(request: Request, response: Response) {
+		const email = request.body?.email || '';
+		if (this._subscribersService.isSubscribed(email)) {
 			response?.send('Користувач існує');
 		} else {
 			response?.send('Користувача не існує');
 		}
 	}
 
-	static getAllSubscribers(response: Response) {
-		const subscribersArray = this.subscribersService.getAllSubscribers();
+	@httpGet('/subscribers')
+	getAllSubscribers(request: Request, response: Response) {
+		const subscribersArray = this._subscribersService.getAllSubscribers();
 		response?.send(subscribersArray);
 	}
 }

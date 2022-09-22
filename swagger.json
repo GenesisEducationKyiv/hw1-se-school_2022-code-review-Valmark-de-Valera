@@ -20,7 +20,7 @@
     "http"
   ],
   "paths": {
-    "/rate": {
+    "/rates/rate": {
       "get": {
         "tags": [
           "rate"
@@ -44,7 +44,7 @@
         }
       }
     },
-    "/subscribe": {
+    "/subscriber/subscribe": {
       "post": {
         "tags": [
           "subscription"
@@ -80,7 +80,7 @@
         }
       }
     },
-    "/sendEmails": {
+    "/subscriber/sendEmails": {
       "post": {
         "tags": [
           "subscription"
@@ -101,7 +101,7 @@
         }
       }
     },
-    "/unsubscribe": {
+    "/subscriber/unsubscribe": {
       "delete": {
         "tags": [
           "subscription"
@@ -137,7 +137,7 @@
         }
       }
     },
-    "/subscribers": {
+    "/subscriber/subscribers": {
       "get": {
         "tags": [
           "subscription"
@@ -155,7 +155,7 @@
         }
       }
     },
-    "/changeProviderByName": {
+    "/rates/changeProviderByName": {
       "put": {
         "tags": [
           "rate"
@@ -189,7 +189,7 @@
         }
       }
     },
-    "/changeProviderByKey": {
+    "/rates/changeProviderByKey": {
       "put": {
         "tags": [
           "rate"

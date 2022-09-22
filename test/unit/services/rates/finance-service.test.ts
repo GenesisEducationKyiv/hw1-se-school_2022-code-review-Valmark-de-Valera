@@ -1,13 +1,16 @@
+import 'reflect-metadata';
 import FinanceService from '../../../../src/services/rates/finance-service';
 import {
 	providersNamesDict,
 	providersKeysDict,
 } from '../../../../src/services/rates/const/providers.const';
+import { container } from '../../../../src/inversify.config';
+import { DIServices } from '../../../../src/DITypes';
 
 describe('FinanceService', function () {
 	describe('#setActiveProviderByName', function () {
 		it('should change 2 rates provider and confirm it', function () {
-			const financeService = new FinanceService();
+			const financeService: FinanceService = container.get(DIServices.FinanceService);
 
 			for (const key in providersNamesDict) {
 				const provider = providersNamesDict[key as keyof typeof providersNamesDict];
@@ -17,7 +20,7 @@ describe('FinanceService', function () {
 			}
 		});
 		it('should not change rate provider', function () {
-			const financeService = new FinanceService();
+			const financeService: FinanceService = container.get(DIServices.FinanceService);
 			const providerName = '';
 
 			const result = financeService.setActiveProviderByName(providerName);
@@ -27,7 +30,7 @@ describe('FinanceService', function () {
 	});
 	describe('#setActiveProviderByKey', function () {
 		it('should change 2 rates provider and confirm it', function () {
-			const financeService = new FinanceService();
+			const financeService: FinanceService = container.get(DIServices.FinanceService);
 
 			for (const key in providersKeysDict) {
 				const provider = providersKeysDict[key as keyof typeof providersKeysDict];

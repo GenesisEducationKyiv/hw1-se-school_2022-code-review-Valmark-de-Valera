@@ -1,12 +1,22 @@
 import FinanceService from '../services/rates/finance-service';
 import { providersNamesDict, providersKeysDict } from '../services/rates/const/providers.const';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { controller, httpGet, httpPut, interfaces } from 'inversify-express-utils';
+import { inject } from 'inversify';
+import { DIServices } from '../DITypes';
 
-class RatesController {
-	static financeService = new FinanceService();
+@controller('/api/rates')
+class RatesController implements interfaces.Controller {
+	private _financeService: FinanceService;
 
-	static changeProviderByName(name: string, response: Response) {
-		const result = this.financeService.setActiveProviderByName(name);
+	constructor(@inject(DIServices.FinanceService) financeService: FinanceService) {
+		this._financeService = financeService;
+	}
+
+	@httpPut('/changeProviderByName')
+	changeProviderByName(request: Request, response: Response) {
+		const name = request.body?.name || '';
+		const result = this._financeService.setActiveProviderByName(name);
 		if (result) response?.send('Провайдер успішно змінено');
 		else
 			response
@@ -18,8 +28,10 @@ class RatesController {
 				);
 	}
 
-	static changeProviderByKey(key: string, response: Response) {
-		const result = this.financeService.setActiveProviderByKey(key);
+	@httpPut('/changeProviderByKey')
+	changeProviderByKey(request: Request, response: Response) {
+		const key = request.body?.key || '';
+		const result = this._financeService.setActiveProviderByKey(key);
 		if (result) response?.send('Провайдер успішно змінено');
 		else
 			response
@@ -31,8 +43,9 @@ class RatesController {
 				);
 	}
 
-	static async getBtcUahRateAsync(response: Response) {
-		const rateValue = await this.financeService.getBtcUahRateAsync();
+	@httpGet('/rate')
+	async getBtcUahRateAsync(request: Request, response: Response) {
+		const rateValue = await this._financeService.getBtcUahRateAsync();
 		if (rateValue && !isNaN(rateValue)) response?.send(rateValue.toFixed());
 		else response?.status(400).send('Помилка виконання запиту');
 	}

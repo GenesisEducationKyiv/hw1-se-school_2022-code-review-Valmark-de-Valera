@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import EmailService from '../../../../src/services/email/email-service';
 
 describe('EmailService', function () {

@@ -4,8 +4,10 @@ import { promises as fs } from 'fs';
 import logFab from '../logger';
 import 'dotenv/config';
 import { validateEmail } from '../utils';
+import { injectable } from 'inversify';
 const log = logFab('EmailService');
 
+@injectable()
 class EmailService {
 	private _transporter: nodemailer.Transporter | undefined;
 

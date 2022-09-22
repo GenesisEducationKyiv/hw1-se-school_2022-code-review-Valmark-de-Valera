@@ -12,10 +12,13 @@
         "noImplicitAny": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "resolveJsonModule": true,"lib": [
+        "resolveJsonModule": true,
+        "lib": [
             "dom",
-            "ES2021.String"
-        ]
+            "ES2021.String",
+            "es6"
+        ],
+        "types": ["reflect-metadata", "jest", "node"]
     },
     "$schema": "https://json.schemastore.org/tsconfig",
     "display": "Recommended",

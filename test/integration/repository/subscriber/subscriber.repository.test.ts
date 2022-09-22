@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import 'reflect-metadata';
 import fs from 'fs';
 import Subscriber from '../../../../src/models/subscriber/subscriber.model';
 import logFab from '../../../../src/services/logger';
