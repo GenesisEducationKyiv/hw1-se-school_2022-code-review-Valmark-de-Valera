@@ -11,7 +11,7 @@ const log = logFab('ProviderFabric');
 
 @injectable()
 class FinanceProviderFabric {
-	getProviderByKey(key: string): IProvider {
+	public getProviderByKey(key: string): IProvider {
 		let providerInstance;
 		switch (key) {
 			case providersKeysDict.binance:

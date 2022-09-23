@@ -1,4 +1,4 @@
-class ErrorMessage extends Error {
+class RateErrorMessage extends Error {
 	public message: string;
 	public code: string;
 
@@ -9,4 +9,4 @@ class ErrorMessage extends Error {
 	}
 }
 
-export default ErrorMessage;
+export default RateErrorMessage;

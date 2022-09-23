@@ -8,6 +8,7 @@ import ISubscriberRepository from './repository/subscriber/interfaces/interface.
 import FileSubscriberRepository from './repository/subscriber/file.subscriber.repository';
 import FinanceProviderFabric from './services/rates/finance-provider.fabric';
 import EmailService from './services/email/email-service';
+import RatePresenterFabric from './services/presenters/rate-presenter.fabric';
 
 const container = new Container();
 container.bind<ICacheService>(DIServices.CacheService).to(NodeCacheService).inSingletonScope();
@@ -15,6 +16,7 @@ container.bind<FinanceService>(DIServices.FinanceService).to(FinanceService).inS
 container.bind<SubscribersService>(DIServices.SubscribersService).to(SubscribersService);
 container.bind<EmailService>(DIServices.EmailService).to(EmailService);
 container.bind<FinanceProviderFabric>(DIServices.FinanceProviderFabric).to(FinanceProviderFabric);
+container.bind<RatePresenterFabric>(DIServices.RatePresenterFabric).to(RatePresenterFabric);
 container
 	.bind<ISubscriberRepository>(DIRepositories.SubscribersRepository)
 	.to(FileSubscriberRepository);

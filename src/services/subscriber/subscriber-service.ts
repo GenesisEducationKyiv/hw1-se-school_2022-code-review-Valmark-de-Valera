@@ -1,11 +1,12 @@
 import Subscriber from '../../models/subscriber/subscriber.model';
 import EmailService from '../email/email-service';
 import logFab from '../logger';
-import SubscriberMailResultResponse from '../../models/subscriber/subscriber-mailresult.model';
+import SubscriberMailResultResponse from '../../models/subscriber/subscriber.mail-result.model';
 import { inject, injectable } from 'inversify';
 import ISubscriberRepository from '../../repository/subscriber/interfaces/interface.subscriber.repository';
 import { DIRepositories, DIServices } from '../../DITypes';
 import FinanceService from '../rates/finance-service';
+import { presenterKeysDict } from '../presenters/const/presenter.const';
 const log = logFab('SubscribersService');
 
 @injectable()
@@ -39,7 +40,7 @@ class SubscribersService {
 	): Promise<SubscriberMailResultResponse[] | undefined> {
 		const receiversEmail: string[] = [];
 		const resultArray: SubscriberMailResultResponse[] = [];
-		const actualRate = await this._financeService.getBtcUahRateAsync();
+		const actualRate = await this._financeService.getBtcUahRateAsync(presenterKeysDict.number);
 		if (!actualRate) {
 			log.error(`Помилка отримання курсу! Відправка пошти зупинена.`);
 			return;

@@ -7,7 +7,7 @@ describe('EmailService', function () {
 			const email = '';
 			const emailService = new EmailService();
 
-			const result = await emailService.sendRateMailAsync(email, 0);
+			const result = await emailService.sendRateMailAsync(email, '0');
 
 			expect(result).toBeFalsy();
 		});

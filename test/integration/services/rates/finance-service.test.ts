@@ -3,6 +3,7 @@ import FinanceService from '../../../../src/services/rates/finance-service';
 import { providersKeysDict } from '../../../../src/services/rates/const/providers.const';
 import { container } from '../../../../src/inversify.config';
 import { DIServices } from '../../../../src/DITypes';
+import { presenterKeysDict } from '../../../../src/services/presenters/const/presenter.const';
 
 describe('FinanceService', function () {
 	describe('#getBtcUahRateAsync', function () {
@@ -10,9 +11,9 @@ describe('FinanceService', function () {
 			const financeService: FinanceService = container.get(DIServices.FinanceService);
 			financeService.autoChangeUnavailableProviders = false;
 
-			const result = await financeService.getBtcUahRateAsync();
+			const result = await financeService.getBtcUahRateAsync(presenterKeysDict.number);
 
-			if (!result || isNaN(result))
+			if (!result)
 				fail(
 					`Service should change rate provider and return valid number, not this: ${result}`
 				);
@@ -23,9 +24,9 @@ describe('FinanceService', function () {
 			financeService.setActiveProviderByKey(providersKeysDict.test);
 			process.env.TEST_PROVIDER_FAIL = String(true);
 
-			const result = await financeService.getBtcUahRateAsync();
+			const result = await financeService.getBtcUahRateAsync(presenterKeysDict.number);
 
-			if (!result || isNaN(result))
+			if (!result)
 				fail(
 					`Service should change rate provider and return valid number, not this: ${result}`
 				);

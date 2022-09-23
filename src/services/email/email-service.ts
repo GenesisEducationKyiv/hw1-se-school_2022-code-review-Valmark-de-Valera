@@ -26,7 +26,7 @@ class EmailService {
 		}
 	}
 
-	async sendRateMailAsync(email: string, rate: number): Promise<boolean> {
+	async sendRateMailAsync(email: string, rate: string): Promise<boolean> {
 		if (!validateEmail(email)) return false;
 		try {
 			const htmlTemplate = await fs.readFile('src/templates/mail-template.html', {
@@ -34,7 +34,7 @@ class EmailService {
 			});
 			const template = handlebars.compile(htmlTemplate);
 			const replacements = {
-				BTC_rate: rate.toString(),
+				BTC_rate: rate,
 			};
 			const htmlToSend = template(replacements);
 			const mailOptions = {

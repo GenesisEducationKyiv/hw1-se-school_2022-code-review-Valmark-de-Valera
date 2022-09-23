@@ -46,7 +46,7 @@ class RatesController implements interfaces.Controller {
 	@httpGet('/rate')
 	async getBtcUahRateAsync(request: Request, response: Response) {
 		const rateValue = await this._financeService.getBtcUahRateAsync();
-		if (rateValue && !isNaN(rateValue)) response?.send(rateValue.toFixed());
+		if (rateValue) response?.send(rateValue);
 		else response?.status(400).send('Помилка виконання запиту');
 	}
 }
