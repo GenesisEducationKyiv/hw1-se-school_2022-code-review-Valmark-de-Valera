@@ -8,7 +8,7 @@ import ISubscriberRepository from './repository/subscriber/interfaces/interface.
 import FileSubscriberRepository from './repository/subscriber/file.subscriber.repository';
 import FinanceProviderFabric from './services/rates/finance-provider.fabric';
 import EmailService from './services/email/email-service';
-import RatePresenterFabric from './services/presenters/rate-presenter.fabric';
+import RatePresenterFabric from './presenter/rate-presenter.fabric';
 
 const container = new Container();
 container.bind<ICacheService>(DIServices.CacheService).to(NodeCacheService).inSingletonScope();

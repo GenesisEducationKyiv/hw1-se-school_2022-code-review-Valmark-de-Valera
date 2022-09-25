@@ -6,8 +6,8 @@ import { DIServices } from '../../DITypes';
 import FinanceProviderFabric from './finance-provider.fabric';
 import 'dotenv/config';
 import ICacheService from '../cache/interfaces/interface.cache-service';
-import { presenterKeysDict } from '../presenters/const/presenter.const';
-import RatePresenterFabric from '../presenters/rate-presenter.fabric';
+import { presenterKeysDict } from '../../presenter/const/presenter.const';
+import RatePresenterFabric from '../../presenter/rate-presenter.fabric';
 const log = logFab('FinanceService');
 
 @injectable()

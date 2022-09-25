@@ -1,5 +1,5 @@
 import IRatePresenter from '../interfaces/interface.rate-presenter';
-import RatePresenterModel from '../../../models/rates/presenter/rate-presenter.model';
+import RatePresenterModel from '../../models/rates/presenter/rate-presenter.model';
 import { injectable } from 'inversify';
 
 @injectable()
