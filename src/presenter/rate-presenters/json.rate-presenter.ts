@@ -5,7 +5,8 @@ import { injectable } from 'inversify';
 @injectable()
 class JsonRatePresenter implements IRatePresenter {
 	public presentRateExchange(from: string, to: string, rate: number): string {
-		return JSON.stringify(new RatePresenterModel(from, to, rate).toObject());
+		const rateModel: RatePresenterModel = { from, to, rate };
+		return JSON.stringify(rateModel);
 	}
 }
 

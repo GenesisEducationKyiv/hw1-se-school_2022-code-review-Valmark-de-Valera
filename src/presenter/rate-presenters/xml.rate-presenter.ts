@@ -8,7 +8,8 @@ import X2JS from 'x2js';
 class XmlRatePresenter implements IRatePresenter {
 	public presentRateExchange(from: string, to: string, rate: number): string {
 		const x2js = new X2JS();
-		return x2js.js2xml(new RatePresenterModel(from, to, rate).toObject());
+		const rateModel: RatePresenterModel = { from, to, rate };
+		return x2js.js2xml(rateModel);
 	}
 }
 
