@@ -1,8 +1,18 @@
-export const rateErrorCodesDist = {
-	INVALID_RATE_VALUE: '400',
-	WRONG_PROVIDER_NAME: '404',
-};
-export const rateErrorMessagesDist = {
-	INVALID_RATE_VALUE: 'Invalid rate value provided',
-	WRONG_PROVIDER_NAME: 'Wrong name provided',
+export const rateErrorsDict = {
+	INVALID_RATE_VALUE: {
+		code: 400,
+		message: 'Invalid rate value provided',
+	},
+	WRONG_PROVIDER_NAME: {
+		code: 404,
+		message: 'Wrong name provided',
+	},
+	WRONG_PROVIDER_RESPONSE: {
+		code: 500,
+		message: 'Wrong answer from provider',
+	},
+	WRONG_PROVIDER_API_PARSE: {
+		code: 500,
+		message: 'Invalid value or response from request. Possible API was changed',
+	},
 };

@@ -17,37 +17,41 @@ class RatesController implements interfaces.Controller {
 	changeProviderByName(request: Request, response: Response) {
 		const name = request.body?.name || '';
 		const result = this._financeService.setActiveProviderByName(name);
-		if (result) response?.send('Провайдер успішно змінено');
-		else
-			response
-				?.status(404)
-				.send(
-					`Провайдер не знайдено. Доступні провайдери: ${Object.values(
-						providersNamesDict
-					)}`
-				);
+		result
+			? response?.send('Провайдер успішно змінено')
+			: response
+					.status(404)
+					.send(
+						`Провайдер не знайдено. Доступні провайдери: ${Object.values(
+							providersNamesDict
+						)}`
+					);
 	}
 
 	@httpPut('/changeProviderByKey')
 	changeProviderByKey(request: Request, response: Response) {
 		const key = request.body?.key || '';
 		const result = this._financeService.setActiveProviderByKey(key);
-		if (result) response?.send('Провайдер успішно змінено');
-		else
-			response
-				?.status(404)
-				.send(
-					`Провайдер не знайдено. Доступні провайдери: ${Object.values(
-						providersKeysDict
-					)}`
-				);
+		result
+			? response.send('Провайдер успішно змінено')
+			: response
+					.status(404)
+					.send(
+						`Провайдер не знайдено. Доступні провайдери: ${Object.values(
+							providersKeysDict
+						)}`
+					);
 	}
 
 	@httpGet('/rate')
 	async getBtcUahRateAsync(request: Request, response: Response) {
-		const rateValue = await this._financeService.getBtcUahRateAsync();
-		if (rateValue) response?.send(rateValue);
-		else response?.status(400).send('Помилка виконання запиту');
+		let rateValue: string;
+		try {
+			rateValue = await this._financeService.getBtcUahRateAsync();
+			response.send(rateValue);
+		} catch (e: any) {
+			response.status(e?.code || 500).send(e?.message || 'Undefined error');
+		}
 	}
 }
 

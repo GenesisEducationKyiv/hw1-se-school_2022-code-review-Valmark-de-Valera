@@ -3,6 +3,8 @@ import fetch from 'node-fetch';
 import { providersNamesDict } from '../../const/providers.const';
 import logFab from '../../../logger';
 import 'dotenv/config';
+import RateErrorMessage from '../../../../models/error/rate-errors/rate-error-message.model';
+import { rateErrorsDict } from '../../../../models/error/const/rate-errors.const';
 const log = logFab('TestRateService');
 
 class TestRateService implements IRateService {
@@ -14,9 +16,9 @@ class TestRateService implements IRateService {
 		this.token = token;
 	}
 
-	public async getBtcUahRateAsync(): Promise<number | null> {
+	public async getBtcUahRateAsync(): Promise<number> {
 		const methodName = 'BTC_UAH_RATE';
-		if (this.testFail) return null;
+		if (this.testFail) throw new RateErrorMessage(rateErrorsDict.INVALID_RATE_VALUE);
 		const url = process.env.TEST_PROVIDER_URL || '';
 		const response = await fetch(url, {
 			method: 'GET',
@@ -33,7 +35,7 @@ class TestRateService implements IRateService {
 					response?.status || 'Wrong response'
 				}]: ${(await response?.text()) || 'Wrong response'}`
 			);
-			return null;
+			throw new RateErrorMessage(rateErrorsDict.WRONG_PROVIDER_RESPONSE);
 		}
 		try {
 			const json = await response.json();
@@ -45,7 +47,7 @@ class TestRateService implements IRateService {
 			log.error(
 				`Invalid value or response from request '${methodName}. Possible API was changed. Error: ${e}`
 			);
-			return null;
+			throw new RateErrorMessage(rateErrorsDict.WRONG_PROVIDER_RESPONSE);
 		}
 	}
 }

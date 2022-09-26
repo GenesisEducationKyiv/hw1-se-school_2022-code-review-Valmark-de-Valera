@@ -3,6 +3,8 @@ import fetch from 'node-fetch';
 import { providersNamesDict } from '../../const/providers.const';
 import logFab from '../../../logger';
 import 'dotenv/config';
+import { rateErrorsDict } from '../../../../models/error/const/rate-errors.const';
+import RateErrorMessage from '../../../../models/error/rate-errors/rate-error-message.model';
 const log = logFab('KunaRateService');
 
 class KunaRateService implements IRateService {
@@ -13,7 +15,7 @@ class KunaRateService implements IRateService {
 		this.token = token;
 	}
 
-	public async getBtcUahRateAsync(): Promise<number | null> {
+	public async getBtcUahRateAsync(): Promise<number> {
 		const methodName = 'BTC_UAH_RATE';
 		const url = process.env.KUNA_PROVIDER_URL || '';
 		const response = await fetch(url, {
@@ -31,7 +33,7 @@ class KunaRateService implements IRateService {
 					response?.status || 'Wrong response'
 				}]: ${(await response?.text()) || 'Wrong response'}`
 			);
-			return null;
+			throw new RateErrorMessage(rateErrorsDict.WRONG_PROVIDER_RESPONSE);
 		}
 		try {
 			const json = await response.json();
@@ -43,7 +45,7 @@ class KunaRateService implements IRateService {
 			log.error(
 				`Invalid value or response from request '${methodName}. Possible API was changed. Error: ${e}`
 			);
-			return null;
+			throw new RateErrorMessage(rateErrorsDict.WRONG_PROVIDER_RESPONSE);
 		}
 	}
 }

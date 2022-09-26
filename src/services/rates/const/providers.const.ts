@@ -1,3 +1,8 @@
+import BinanceProvider from '../providers/binance.provider';
+import CoinbaseProvider from '../providers/coinbase.provider';
+import KunaProvider from '../providers/kuna.provider';
+import NomicsProvider from '../providers/nomics.provider';
+
 export const providersNamesDict = {
 	binance: 'Binance',
 	coinbase: 'Coinbase',
@@ -14,7 +19,9 @@ export const providersKeysDict = {
 	test: 'test-pk',
 };
 
-// export default {
-// 	providersNamesDict: Object.freeze(providersNamesDict),
-// 	providersKeysDict: Object.freeze(providersKeysDict),
-// };
+export const providersClassesDict = {
+	binance: BinanceProvider,
+	coinbase: CoinbaseProvider,
+	kuna: KunaProvider,
+	nomics: NomicsProvider,
+};

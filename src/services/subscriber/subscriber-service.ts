@@ -46,9 +46,10 @@ class SubscribersService {
 			return;
 		}
 		receivers.map((item: Subscriber) => receiversEmail.push(item.getEmail()));
-		for (const item of receiversEmail) {
-			const result = await this._emailService.sendRateMailAsync(item, actualRate);
-			resultArray.push(new SubscriberMailResultResponse(item, result));
+		for (const email of receiversEmail) {
+			const result = await this._emailService.sendRateMailAsync(email, actualRate);
+			const resultResponseModel: SubscriberMailResultResponse = { email, result };
+			resultArray.push(resultResponseModel);
 		}
 		log.info(`Результат відправки курсу: ${JSON.stringify(resultArray)}`);
 		return resultArray;

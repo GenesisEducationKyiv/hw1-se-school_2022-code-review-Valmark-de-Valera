@@ -1,7 +1,7 @@
 interface IRateService {
 	providerName: string;
 	token: string;
-	getBtcUahRateAsync(): Promise<number | null>;
+	getBtcUahRateAsync(): Promise<number>;
 }
 
 export default IRateService;
