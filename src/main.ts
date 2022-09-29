@@ -8,7 +8,7 @@ const serverHost = process.env.SERVER_HOST || '0.0.0.0';
 const serverPort = Number(process.env.SERVER_PORT || '3000');
 const rmqUser = process.env.RABBITMQ_USER || 'admin';
 const rmqPassword = process.env.RABBITMQ_PASSWORD || 'admin';
-const rmqHost = process.env.RABBITMQ_HOST || 'localhost:5672';
+const rmqHost = process.env.RABBITMQ_HOST || '0.0.0.0:5672';
 const rmqQueueName = process.env.RABBITMQ_QUEUE_NAME || 'queue';
 
 async function bootstrap() {

@@ -53,7 +53,7 @@ export class EmailService {
 			return result?.accepted.length !== 0;
 		} catch (e) {
 			this.logger.error(`Failed to send email: ${(e as Exception).message}`);
-			return false;
+			throw new Error(`Failed to send email: ${e.message}`);
 		}
 	}
 }
