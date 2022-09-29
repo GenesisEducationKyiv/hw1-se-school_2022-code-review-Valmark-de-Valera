@@ -1,5 +1,5 @@
 import 'x2js';
-import X2JS from 'x2js';
+import * as X2JS from 'x2js';
 import { IRatePresenter } from '../interfaces/interface.rate-presenter';
 import { RatePresenterModel } from '../../models/rate-presenter.model';
 

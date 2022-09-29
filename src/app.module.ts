@@ -1,8 +1,8 @@
 import { ConfigModule } from '@nestjs/config';
 import { FinanceModule } from './finance.module/finance.module';
-import { SubscriberModule } from './subscriber.module/subscriber.module';
 import { CacheModule, Module } from '@nestjs/common';
 import { NotificationModule } from './notification.module/notification.module';
+import { UserModule } from './user.module/user.module';
 
 @Module({
 	imports: [
@@ -11,7 +11,7 @@ import { NotificationModule } from './notification.module/notification.module';
 		}),
 		ConfigModule.forRoot(),
 		FinanceModule,
-		SubscriberModule,
+		UserModule,
 		NotificationModule,
 	],
 })

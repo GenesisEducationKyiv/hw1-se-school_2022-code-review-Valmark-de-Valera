@@ -1,15 +1,18 @@
 import * as nodemailer from 'nodemailer';
 import handlebars, { Exception } from 'handlebars';
 import { promises as fs } from 'fs';
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { isEmail } from 'class-validator';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class EmailService {
 	private readonly logger = new Logger(EmailService.name);
+	private _subscribersRmqService: ClientProxy;
 	private _transporter: nodemailer.Transporter | undefined;
 
-	constructor() {
+	constructor(@Inject('SUBSCRIBERS_RMQ_SERVICE') _subscribersRmqService: ClientProxy) {
+		this._subscribersRmqService = _subscribersRmqService;
 		try {
 			this._transporter = nodemailer.createTransport({
 				service: process.env.Service,

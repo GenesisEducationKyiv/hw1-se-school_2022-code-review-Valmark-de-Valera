@@ -2,9 +2,14 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
-const host = process.env.SERVER_HOST || '0.0.0.0';
-const port = Number(process.env.SERVER_PORT || '3000');
+const serverHost = process.env.SERVER_HOST || '0.0.0.0';
+const serverPort = Number(process.env.SERVER_PORT || '3000');
+const rmqUser = process.env.RABBITMQ_USER || 'admin';
+const rmqPassword = process.env.RABBITMQ_PASSWORD || 'admin';
+const rmqHost = process.env.RABBITMQ_HOST || 'localhost:5672';
+const rmqQueueName = process.env.RABBITMQ_QUEUE_NAME || 'queue';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -20,6 +25,19 @@ async function bootstrap() {
 	const document = SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup('/', app, document);
 	app.useGlobalPipes(new ValidationPipe());
-	await app.listen(port, host);
+
+	await app.connectMicroservice<MicroserviceOptions>({
+		transport: Transport.RMQ,
+		options: {
+			urls: [`amqp://${rmqUser}:${rmqPassword}@${rmqHost}`],
+			queue: rmqQueueName,
+			queueOptions: {
+				durable: true,
+			},
+		},
+	});
+
+	await app.startAllMicroservices();
+	await app.listen(serverPort, serverHost);
 }
 bootstrap();

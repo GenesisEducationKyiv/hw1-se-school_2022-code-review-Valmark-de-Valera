@@ -1,18 +1,17 @@
 import { Module } from '@nestjs/common';
-import { EmailService } from './email.service/email.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { FinanceModule } from '../finance.module/finance.module';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
-import { NotificationController } from './notification.controller/notification.controller';
-import { NotificationService } from './notification.service/notification.service';
-import { FileNotificationRepository } from './notification.repository/file.notification.repository';
+import { UserController } from './user.controller/user.controller';
+import { UserService } from './user.service/user.service';
+import { FileUserRepository } from './user.service/repository/file.user.repository';
 
 @Module({
-	imports: [ConfigModule.forRoot()],
-	controllers: [NotificationController],
+	imports: [ConfigModule.forRoot(), FinanceModule],
+	controllers: [UserController],
 	providers: [
-		EmailService,
-		NotificationService,
-		FileNotificationRepository,
+		FileUserRepository,
+		UserService,
 		{
 			provide: 'SUBSCRIBERS_RMQ_SERVICE',
 			useFactory: (configService: ConfigService) => {
@@ -35,5 +34,6 @@ import { FileNotificationRepository } from './notification.repository/file.notif
 			inject: [ConfigService],
 		},
 	],
+	exports: [FileUserRepository],
 })
-export class NotificationModule {}
+export class UserModule {}
