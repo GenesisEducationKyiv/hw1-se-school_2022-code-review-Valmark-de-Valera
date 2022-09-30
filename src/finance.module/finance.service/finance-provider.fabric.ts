@@ -14,14 +14,7 @@ export class FinanceProviderFabric {
 			(dictKey: string) =>
 				providersKeysDict[dictKey as keyof typeof providersKeysDict] === key,
 		);
-		if (key === providersKeysDict.test) {
-			if (process.env.NODE_ENV === 'test') {
-				providerInstance = new TestProvider();
-				return providerInstance;
-			} else {
-				this.logger.error('Test providers are used only for testing purposes!');
-			}
-		}
+		if (key === providersKeysDict.test && process.env.NODE_ENV !== 'test') //throw error or return null
 		providerInstance = new (providersClassesDict[
 			dictKey as keyof typeof providersClassesDict
 		] ?? BinanceProvider)();
