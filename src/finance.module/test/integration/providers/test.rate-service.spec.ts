@@ -25,7 +25,7 @@ describe('TestRateService', () => {
 
 	describe('#getBtcUahRateAsync', function () {
 		it('should return rate as number', async function () {
-			const result = await service.getBtcUahRateAsync();
+			const result = await service.getRateAsync();
 
 			if (!result || isNaN(result))
 				fail(`Provider should return number, not this: ${result}`);
@@ -36,7 +36,7 @@ describe('TestRateService', () => {
 
 			let result: number | null;
 			try {
-				result = await service.getBtcUahRateAsync();
+				result = await service.getRateAsync();
 			} catch (err: any) {
 				result = null;
 				expect(err?.message).toBe(rateErrorsDict.INVALID_RATE_VALUE);

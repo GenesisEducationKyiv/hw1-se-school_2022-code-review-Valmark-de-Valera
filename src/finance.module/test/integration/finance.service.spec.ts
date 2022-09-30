@@ -22,7 +22,7 @@ describe('FinanceService', () => {
 		it('should return valid rate value', async function () {
 			service.autoChangeUnavailableProviders = false;
 
-			const result = await service.getBtcUahRateAsync();
+			const result = await service.getRateAsync();
 
 			if (!result)
 				fail(
@@ -34,7 +34,7 @@ describe('FinanceService', () => {
 			process.env.TEST_PROVIDER_FAIL = String(true);
 			service.setActiveProviderByKey(providersKeysDict.test);
 
-			const result = await service.getBtcUahRateAsync();
+			const result = await service.getRateAsync();
 
 			if (!result)
 				fail(

@@ -2,11 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 import { providersClassesDict, providersKeysDict } from './const/providers.const';
 import { IProvider } from './providers/interfaces/interface.provider';
 import { TestProvider } from './providers/test.provider';
-import { BinanceProvider } from './providers/binance.provider';
 
 @Injectable()
 export class FinanceProviderFabric {
 	private readonly logger = new Logger(FinanceProviderFabric.name);
+	private _defaultProviderClass = providersClassesDict.binance;
 
 	public getProviderByKey(key: string): IProvider {
 		let providerInstance: IProvider;
@@ -24,7 +24,7 @@ export class FinanceProviderFabric {
 		}
 		providerInstance = new (providersClassesDict[
 			dictKey as keyof typeof providersClassesDict
-		] ?? BinanceProvider)();
+		] ?? this._defaultProviderClass)();
 		this.logger.log(`Success set provider: ${providerInstance.providerName}`);
 		return providerInstance;
 	}

@@ -53,7 +53,7 @@ describe('Binance E2E Tests', function () {
 		let resultWeb = await page.evaluate(() => {
 			return document.getElementsByClassName('showPrice')[0].innerHTML;
 		});
-		const resultApi = await service.getBtcUahRateAsync();
+		const resultApi = await service.getRateAsync();
 		resultWeb = resultWeb.replaceAll(',', '');
 
 		if (parseFloat(resultWeb) !== resultApi)

@@ -20,7 +20,7 @@ export class TestRateService implements IRateService {
 		this.token = token;
 	}
 
-	public async getBtcUahRateAsync(): Promise<number> {
+	public async getRateAsync(): Promise<number> {
 		const methodName = 'BTC_UAH_RATE';
 		if (this.testFail) throw new Error(rateErrorsDict.INVALID_RATE_VALUE);
 		const url = process.env.TEST_PROVIDER_URL || '';

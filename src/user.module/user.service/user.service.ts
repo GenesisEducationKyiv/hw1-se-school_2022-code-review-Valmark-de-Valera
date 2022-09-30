@@ -62,7 +62,7 @@ export class UserService {
 	}
 
 	public async sendEmailsAsync(receivers = this.getAllSubscribers()): Promise<string> {
-		const actualRate = await this._financeService.getBtcUahRateAsync();
+		const actualRate = await this._financeService.getRateAsync();
 		if (!actualRate) {
 			this.logger.error(`Помилка отримання курсу! Відправка пошти зупинена.`);
 			throw new Error(`Помилка отримання курсу! Відправка пошти зупинена.`);

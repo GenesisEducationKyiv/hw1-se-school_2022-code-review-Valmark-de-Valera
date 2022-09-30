@@ -73,7 +73,7 @@ export class RateController {
 		let rateValue: number;
 		const presenter = this._ratePresenterFabric.getPresenterByKey(this._defaultPresenterKey);
 		try {
-			rateValue = await this._financeService.getBtcUahRateAsync();
+			rateValue = await this._financeService.getRateAsync();
 			res.send(presenter.presentRateExchange('BTC', 'UAH', rateValue));
 		} catch (e: any) {
 			res.status(e?.code || 400).send(e?.message || 'Undefined error');

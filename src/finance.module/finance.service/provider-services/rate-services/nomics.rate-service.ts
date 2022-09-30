@@ -19,7 +19,7 @@ export class NomicsRateService implements IRateService {
 		this.token = token;
 	}
 
-	public async getBtcUahRateAsync(): Promise<number> {
+	public async getRateAsync(): Promise<number> {
 		const methodName = 'BTC_UAH_RATE';
 		const url = process.env.NOMICS_PROVIDER_URL || '';
 		const response = await fetch(url, {

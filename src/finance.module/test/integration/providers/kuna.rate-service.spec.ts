@@ -22,7 +22,7 @@ describe('KunaRateService', () => {
 
 	describe('#getBtcUahRateAsync', function () {
 		it('should return rate as number', async function () {
-			const result = await service.getBtcUahRateAsync();
+			const result = await service.getRateAsync();
 
 			if (!result || isNaN(result))
 				fail(`Provider should return number, not this: ${result}`);

@@ -21,7 +21,7 @@ export class CoinbaseRateService implements IRateService {
 		this.token = token;
 	}
 
-	public async getBtcUahRateAsync(): Promise<number> {
+	public async getRateAsync(): Promise<number> {
 		const methodName = 'BTC_UAH_RATE';
 		const url = process.env.COINBASE_PROVIDER_URL || '';
 		const response = await fetch(url, {
