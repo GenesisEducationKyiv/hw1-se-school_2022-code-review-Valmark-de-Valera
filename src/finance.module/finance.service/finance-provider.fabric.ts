@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { providersClassesDict, providersKeysDict } from './const/providers.const';
 import { IProvider } from './providers/interfaces/interface.provider';
-import { TestProvider } from './providers/test.provider';
 
 @Injectable()
 export class FinanceProviderFabric {
@@ -14,10 +13,11 @@ export class FinanceProviderFabric {
 			(dictKey: string) =>
 				providersKeysDict[dictKey as keyof typeof providersKeysDict] === key,
 		);
-		if (key === providersKeysDict.test && process.env.NODE_ENV !== 'test') //throw error or return null
 		providerInstance = new (providersClassesDict[
 			dictKey as keyof typeof providersClassesDict
 		] ?? this._defaultProviderClass)();
+		if (key === providersKeysDict.test && process.env.NODE_ENV !== 'test')
+			throw new Error(`Test provider can be used only for testing purposes`);
 		this.logger.log(`Success set provider: ${providerInstance.providerName}`);
 		return providerInstance;
 	}
