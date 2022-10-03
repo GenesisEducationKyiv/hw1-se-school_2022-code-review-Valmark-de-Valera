@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { LoggerService } from './logger.module/logger.service/logger.service';
 
 const serverHost = process.env.SERVER_HOST || '0.0.0.0';
 const serverPort = Number(process.env.SERVER_PORT || '3000');
@@ -10,9 +11,13 @@ const rmqUser = process.env.RABBITMQ_USER || 'admin';
 const rmqPassword = process.env.RABBITMQ_PASSWORD || 'admin';
 const rmqHost = process.env.RABBITMQ_HOST || '0.0.0.0:5672';
 const rmqQueueName = process.env.RABBITMQ_QUEUE_NAME || 'queue';
+const rmqLogQueueName = process.env.RABBITMQ_LOG_QUEUE_NAME || 'consumer';
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
+	const app = await NestFactory.create(AppModule, {
+		bufferLogs: false,
+	});
+	app.useLogger(app.get(LoggerService));
 	const config = new DocumentBuilder()
 		.setTitle('GSES2 BTC application')
 		.setDescription(
@@ -31,6 +36,16 @@ async function bootstrap() {
 		options: {
 			urls: [`amqp://${rmqUser}:${rmqPassword}@${rmqHost}`],
 			queue: rmqQueueName,
+			queueOptions: {
+				durable: true,
+			},
+		},
+	});
+	await app.connectMicroservice<MicroserviceOptions>({
+		transport: Transport.RMQ,
+		options: {
+			urls: [`amqp://${rmqUser}:${rmqPassword}@${rmqHost}`],
+			queue: rmqLogQueueName,
 			queueOptions: {
 				durable: true,
 			},

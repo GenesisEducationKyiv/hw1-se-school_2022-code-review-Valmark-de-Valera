@@ -3,6 +3,7 @@ import { FinanceModule } from './finance.module/finance.module';
 import { CacheModule, Module } from '@nestjs/common';
 import { NotificationModule } from './notification.module/notification.module';
 import { UserModule } from './user.module/user.module';
+import { LoggerModule } from './logger.module/logger.module';
 
 @Module({
 	imports: [
@@ -13,6 +14,7 @@ import { UserModule } from './user.module/user.module';
 		FinanceModule,
 		UserModule,
 		NotificationModule,
+		LoggerModule,
 	],
 })
 export class AppModule {}

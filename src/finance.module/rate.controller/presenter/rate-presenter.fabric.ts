@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { presenterClassesDict } from './const/presenter.const';
 import { IRatePresenter } from './interfaces/interface.rate-presenter';
-import { JsonRatePresenter } from './rate-presenters/json.rate-presenter';
 
 @Injectable()
 export class RatePresenterFabric {

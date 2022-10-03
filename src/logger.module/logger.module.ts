@@ -1,24 +1,19 @@
 import { Module } from '@nestjs/common';
+import { LoggerService } from './logger.service/logger.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { FinanceModule } from '../finance.module/finance.module';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
-import { UserController } from './user.controller/user.controller';
-import { UserService } from './user.service/user.service';
-import { FileUserRepository } from './user.service/repository/file.user.repository';
 
 @Module({
-	imports: [ConfigModule.forRoot(), FinanceModule],
-	controllers: [UserController],
+	imports: [ConfigModule.forRoot()],
 	providers: [
-		FileUserRepository,
-		UserService,
+		LoggerService,
 		{
-			provide: 'SUBSCRIBERS_RMQ_SERVICE',
+			provide: 'SUBSCRIBERS_LOG_RMQ_SERVICE',
 			useFactory: (configService: ConfigService) => {
 				const user = configService.get('RABBITMQ_USER');
 				const password = configService.get('RABBITMQ_PASSWORD');
 				const host = configService.get('RABBITMQ_HOST');
-				const queueName = configService.get('RABBITMQ_QUEUE_NAME') ?? 'consumer';
+				const queueName = configService.get('RABBITMQ_LOG_QUEUE_NAME');
 
 				return ClientProxyFactory.create({
 					transport: Transport.RMQ,
@@ -33,7 +28,11 @@ import { FileUserRepository } from './user.service/repository/file.user.reposito
 			},
 			inject: [ConfigService],
 		},
+		{
+			provide: 'Default_Name',
+			useValue: 'NEST',
+		},
 	],
-	exports: [FileUserRepository],
+	exports: [LoggerService],
 })
-export class UserModule {}
+export class LoggerModule {}
