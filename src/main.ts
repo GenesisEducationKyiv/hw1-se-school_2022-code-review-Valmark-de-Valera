@@ -12,12 +12,12 @@ const rmqPassword = process.env.RABBITMQ_PASSWORD || 'admin';
 const rmqHost = process.env.RABBITMQ_HOST || '0.0.0.0:5672';
 const rmqQueueName = process.env.RABBITMQ_QUEUE_NAME || 'queue';
 const rmqLogQueueName = process.env.RABBITMQ_LOG_QUEUE_NAME || 'consumer';
-
+const useCustomLogger = false;
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, {
 		bufferLogs: false,
 	});
-	app.useLogger(app.get(LoggerService));
+	if (useCustomLogger) app.useLogger(app.get(LoggerService));
 	const config = new DocumentBuilder()
 		.setTitle('GSES2 BTC application')
 		.setDescription(

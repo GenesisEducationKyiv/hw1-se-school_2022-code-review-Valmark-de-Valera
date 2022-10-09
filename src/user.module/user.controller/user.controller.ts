@@ -18,15 +18,20 @@ import {
 } from './const/subscriber-swagger.const';
 import { UserService } from '../user.service/user.service';
 import { UserHttpModel } from '../models/user.model';
+import { CommandBus } from '@nestjs/cqrs';
+import { SubscribeSagaCommand } from '../saga/subscribeSaga';
+import { UnsubscribeSagaCommand } from '../saga/unsubscribeSaga';
 
 @Controller('subscriber')
 @ApiTags('subscription')
 @ApiProduces('application/json')
 export class UserController {
 	private _userService: UserService;
+	private _commandBus: CommandBus;
 
-	constructor(_subscriberService: UserService) {
+	constructor(_subscriberService: UserService, _commandBus: CommandBus) {
 		this._userService = _subscriberService;
+		this._commandBus = _commandBus;
 	}
 
 	@Post('/subscribe')
@@ -36,14 +41,20 @@ export class UserController {
 	@ApiResponse(subscribeDoc.ApiResponses[1])
 	@ApiResponse(subscribeDoc.ApiResponses[2])
 	@ApiBody(subscribeDoc.ApiBody[0])
-	addSubscriber(@Req() req: Request, @Res() res: Response, @Body() subscriber: UserHttpModel) {
+	async addSubscriber(
+		@Req() req: Request,
+		@Res() res: Response,
+		@Body() subscriber: UserHttpModel,
+	) {
 		const email = subscriber.email;
-		const result = this._userService.subscribe(email);
-		result
-			? res.send('E-mail додано')
-			: res
-					?.status(UserErrorsDict.EMAIL_ALREADY_EXIST.code)
-					.send(UserErrorsDict.EMAIL_ALREADY_EXIST.message);
+		try {
+			await this._commandBus.execute(new SubscribeSagaCommand(email));
+			res.send('E-mail додано');
+		} catch (e) {
+			res?.status(UserErrorsDict.EMAIL_ALREADY_EXIST.code).send(
+				UserErrorsDict.EMAIL_ALREADY_EXIST.message,
+			);
+		}
 	}
 
 	@Delete('/unsubscribe')
@@ -53,14 +64,20 @@ export class UserController {
 	@ApiResponse(unsubscribeDoc.ApiResponses[1])
 	@ApiResponse(unsubscribeDoc.ApiResponses[2])
 	@ApiBody(unsubscribeDoc.ApiBody[0])
-	removeSubscriber(@Req() req: Request, @Res() res: Response, @Body() subscriber: UserHttpModel) {
+	async removeSubscriber(
+		@Req() req: Request,
+		@Res() res: Response,
+		@Body() subscriber: UserHttpModel,
+	) {
 		const email = subscriber.email;
-		const result = this._userService.unsubscribe(email);
-		result
-			? res.send('E-mail видалено')
-			: res
-					.status(UserErrorsDict.EMAIL_ALREADY_DELETED.code)
-					.send(UserErrorsDict.EMAIL_ALREADY_DELETED.message);
+		try {
+			await this._commandBus.execute(new UnsubscribeSagaCommand(email));
+			res.send('E-mail видалено');
+		} catch (e) {
+			res.status(UserErrorsDict.EMAIL_ALREADY_DELETED.code).send(
+				UserErrorsDict.EMAIL_ALREADY_DELETED.message,
+			);
+		}
 	}
 
 	@Post('/sendEmails')

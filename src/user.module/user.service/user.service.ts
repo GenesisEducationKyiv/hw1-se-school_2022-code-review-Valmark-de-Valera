@@ -6,7 +6,6 @@ import { User } from '../models/user.model';
 import {
 	NotificationContractPatterns,
 	NotificationRateContract,
-	NotificationSubscriberContract,
 } from './const/notification.contract.const';
 
 @Injectable()
@@ -28,29 +27,13 @@ export class UserService {
 
 	public subscribe(email: string): boolean {
 		const userInstance = new User(email);
-		const result = this._userRepository.append(userInstance);
-		if (result) {
-			const subscriberContract: NotificationSubscriberContract = { email };
-			this._subscribersRmqService.emit(
-				NotificationContractPatterns.addSubscriber,
-				subscriberContract,
-			);
-		}
-		return result;
+		return this._userRepository.append(userInstance);
 	}
 
 	public unsubscribe(email: string): boolean {
 		const user = this._userRepository.getByEmail(email);
 		if (!user) return false;
-		const result = this._userRepository.remove(user);
-		if (result) {
-			const subscriberContract: NotificationSubscriberContract = { email };
-			this._subscribersRmqService.emit(
-				NotificationContractPatterns.removeSubscriber,
-				subscriberContract,
-			);
-		}
-		return result;
+		return this._userRepository.remove(user);
 	}
 
 	public getAllSubscribers(): User[] {
