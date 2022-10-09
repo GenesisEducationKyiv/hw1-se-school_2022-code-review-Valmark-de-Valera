@@ -1,0 +1,68 @@
+version: '3.8'
+networks:
+  app-tier:
+    driver: bridge
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    volumes:
+      - /var/lib/rabbitmq
+    ports:
+      - "0.0.0.0:5672:5672"
+      - "0.0.0.0:15672:15672"
+    env_file:
+      - ./rabbitmq.env
+    networks:
+      - app-tier
+  dev:
+    container_name: nestjs_api_dev
+    image: nestjs-api-dev:1.0.0
+    environment:
+      - RABBITMQ_HOST=rabbitmq:5672
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+    command: npm run start:debug
+    ports:
+      - "0.0.0.0:3001:3000"
+      - "0.0.0.0:9229:9229"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - ./.env
+    networks:
+      - app-tier
+    restart: unless-stopped
+  prod:
+    container_name: nestjs_api_prod
+    image: nestjs-api-prod:1.0.0
+    environment:
+      - RABBITMQ_HOST=rabbitmq:5672
+    build:
+      context: .
+      target: production
+      dockerfile: ./Dockerfile
+    links:
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+    command: npm run start:prod
+    ports:
+      - "0.0.0.0:3002:3000"
+      - "0.0.0.0:9230:9229"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - ./.env
+    networks:
+      - app-tier
+    restart: unless-stopped
