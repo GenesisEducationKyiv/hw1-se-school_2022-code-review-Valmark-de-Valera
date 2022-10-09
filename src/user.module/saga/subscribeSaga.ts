@@ -26,10 +26,10 @@ export class SubscribeSaga {
 	}
 
 	saga = new Builder<SubscribeSagaCommand, boolean>()
-		.step('do something')
+		.step('Subscribe to users db')
 		.invoke(this.subscribe)
 		.withCompensation(this.subscribeCompensation)
-		.step()
+		.step('Subscribe to subscribers db')
 		.invoke(this.sendSubscribe)
 		.withCompensation(this.sendSubscribeCompensation)
 		.return(this.buildResult)
@@ -38,7 +38,7 @@ export class SubscribeSaga {
 	subscribe(cmd: SubscribeSagaCommand) {
 		this._unsubscribeResult = this._userService.subscribe(cmd.email);
 		if (!this._unsubscribeResult) {
-			throw new Error(`Error calling subscribe`);
+			throw new Error(`Subscribe error`);
 		}
 	}
 	subscribeCompensation(cmd: SubscribeSagaCommand) {

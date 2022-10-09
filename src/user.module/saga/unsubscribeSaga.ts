@@ -26,10 +26,10 @@ export class UnsubscribeSaga {
 	}
 
 	saga = new Builder<UnsubscribeSagaCommand, boolean>()
-		.step('do something')
+		.step('Unsubscribe from users db')
 		.invoke(this.unsubscribe)
 		.withCompensation(this.unsubscribeCompensation)
-		.step()
+		.step('Unsubscribe from subscribers db')
 		.invoke(this.sendUnsubscribe)
 		.withCompensation(this.sendUnsubscribeCompensation)
 		.return(this.buildResult)
@@ -38,7 +38,7 @@ export class UnsubscribeSaga {
 	unsubscribe(cmd: UnsubscribeSagaCommand) {
 		this._unsubscribeResult = this._userService.unsubscribe(cmd.email);
 		if (!this._unsubscribeResult) {
-			throw new Error(`UnsubscribeError`);
+			throw new Error(`Unsubscribe error`);
 		}
 	}
 	unsubscribeCompensation(cmd: UnsubscribeSagaCommand) {
